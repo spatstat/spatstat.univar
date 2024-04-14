@@ -1,7 +1,7 @@
 Package: spatstat.univar
 Version: 2.0-0
 Date: 2024-04-14
-Title: One-Dimensional Kernel Density Estimation for the 'spatstat' Family 
+Title: One-Dimensional Probability Distribution Support for the 'spatstat' Family 
 Authors@R: c(person("Adrian", "Baddeley", 
                     role = c("aut", "cre", "cph"),
        	            email = "Adrian.Baddeley@curtin.edu.au",
