@@ -9,6 +9,7 @@
 \alias{print.ewcdf}
 \alias{StieltjesCalc}
 \alias{StieltjesCalc.stepfun}
+\alias{quantilefun.interpolatedCDF}
 \description{
   Undocumented Functions
 }
@@ -22,8 +23,19 @@ match.kernel(kernel)
 \method{print}{ewcdf}(x, digits, \dots)
 StieltjesCalc(M, f, \dots)
 \method{StieltjesCalc}{stepfun}(M, f, \dots)
+\method{quantilefun}{interpolatedCDF}(x, \dots, type)
 }
 \details{
   These functions are not documented.
+}
+\value{
+  \code{as.breakpts}, \code{breakpts}, \code{breakpts.from.r} and
+  \code{make.even.breaks} return an object of class \code{"breakpts"}
+  which defines a sequence of breakpoints, identifies whether they are
+  equally-spaced and so on. \code{match.kernel} returns a single
+  character string. \code{check.hist.lengths} returns \code{NULL}.
+  \code{quantilefun.interpolatedCDF} returns a function.
+  The \code{print} method returns \code{NULL}. Other functions are
+  not documented.
 }
 \keyword{internal}

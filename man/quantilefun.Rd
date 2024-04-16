@@ -68,8 +68,7 @@
   FZ <- ecdf(z)
   QZ <- quantilefun(FZ)
   QZ(0.5) # median value of z
-  if(interactive()) plot(QZ, xlim=c(0,1), xlab="probability",
-                     ylab="quantile of z")
+  if(interactive()) plot(QZ,xlim=c(0,1),xlab="probability",ylab="quantile of z")
 }
 \author{
   \spatstatAuthors.
