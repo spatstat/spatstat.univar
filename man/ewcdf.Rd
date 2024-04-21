@@ -64,10 +64,10 @@ ewcdf(x, weights = NULL, normalise=TRUE, adjust=1)
 \seealso{
   \code{\link[stats]{ecdf}}.
   
-  \code{\link{quantile.ewcdf}}, \code{\link{mean.ewcdf}}.
+  \code{\link[spatstat.univar]{quantile.ewcdf}}, \code{\link[spatstat.univar]{mean.ewcdf}}.
 
   Integrals with respect to the weighted cumulative distribution function
-  can be computed using \code{\link[spatstat.explore]{stieltjes}}.
+  can be computed using \code{\link[spatstat.univar]{stieltjes}}.
 }
 \examples{
    x <- rnorm(100)

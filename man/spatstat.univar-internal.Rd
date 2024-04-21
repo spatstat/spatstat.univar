@@ -4,12 +4,13 @@
 \alias{breakpts}
 \alias{breakpts.from.r}
 \alias{check.hist.lengths}
+\alias{km.rs.opt}
 \alias{make.even.breaks}
 \alias{match.kernel}
 \alias{print.ewcdf}
+\alias{quantilefun.interpolatedCDF}
 \alias{StieltjesCalc}
 \alias{StieltjesCalc.stepfun}
-\alias{quantilefun.interpolatedCDF}
 \description{
   Undocumented Functions
 }
@@ -19,11 +20,13 @@ breakpts(val, maxi, even, npos, step)
 breakpts.from.r(r)
 check.hist.lengths(hist, breaks)
 make.even.breaks(bmax, npos, bstep)
+km.rs.opt(o, cc, d, breaks, KM, RS)
+make.even.breaks(bmax, npos, bstep)
 match.kernel(kernel)
 \method{print}{ewcdf}(x, digits, \dots)
+\method{quantilefun}{interpolatedCDF}(x, \dots, type)
 StieltjesCalc(M, f, \dots)
 \method{StieltjesCalc}{stepfun}(M, f, \dots)
-\method{quantilefun}{interpolatedCDF}(x, \dots, type)
 }
 \details{
   These functions are not documented.

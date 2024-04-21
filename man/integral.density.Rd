@@ -63,9 +63,7 @@
 \seealso{
   \code{\link[stats]{density.default}}
 
-  % temporarily break links
-  %  \code{\link[spatstat.explore]{quantile.density}}, \code{\link[spatstat.explore]{CDF.density}}
-    \code{quantile.density}, \code{CDF.density} in package \pkg{spatstat.explore}
+  \code{\link[spatstat.univar]{quantile.density}}, \code{\link[spatstat.univar]{CDF.density}}
 }
 \examples{
   x <- runif(10)
