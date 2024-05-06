@@ -3,7 +3,7 @@
 #'
 #'   weighted versions of hist, var, median, quantile
 #'
-#'  $Revision: 1.10 $  $Date: 2023/11/05 01:20:43 $
+#'  $Revision: 1.11 $  $Date: 2024/05/06 00:50:47 $
 #'
 
 
@@ -100,15 +100,21 @@ weighted.quantile <- function(x, w, probs=seq(0,1,0.25), na.rm=TRUE, type=4, col
     Fx <- Fx[!dup]
   }
   #'
-  if(length(x) > 1) {
-    out <- switch(as.character(type),
-                  "1" = approx(Fx, x, xout=probs, ties="ordered", rule=2,
-                               method="constant", f=1),
-                  "2" = approx(Fx, x, xout=probs, ties="ordered", rule=2,
-                               method="constant", f=1/2),
-                  "4" = approx(Fx, x, xout=probs, ties="ordered", rule=2,
-                               method="linear"))
-    result <- out$y
+  nx <- length(x)
+  if(nx > 1) {
+    result <- switch(as.character(type),
+                     "1" = approx(Fx, x, xout=probs, ties="ordered", rule=2,
+                                  method="constant", f=1)$y,
+                     "2" = {
+                       j <- approx(Fx, 1:nx, xout=probs, ties="ordered",
+                                   rule=2, method="constant", f=0)$y
+                       j <- as.integer(j)
+                       g <- probs - Fx[j]
+                       jplus1 <- pmin(j+1, nx)
+                       ifelse(g == 0, (x[j]+x[jplus1])/2, x[jplus1])
+                     },
+                     "4" = approx(Fx, x, xout=probs, ties="ordered", rule=2,
+                                  method="linear")$y)
   } else {
     result <- rep.int(x, length(probs))
   }

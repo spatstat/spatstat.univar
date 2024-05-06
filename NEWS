@@ -1,3 +1,15 @@
+        CHANGES IN spatstat.univar VERSION 2.0-3.001
+
+OVERVIEW
+
+    o Bug fix in weighted.quantile
+
+BUG FIXES
+
+    o weighted.quantile
+    Implementation was incorrect for type=2.
+    Fixed.
+    
         CHANGES IN spatstat.univar VERSION 2.0-3
 
 OVERVIEW
