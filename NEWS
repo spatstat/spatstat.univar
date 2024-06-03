@@ -1,9 +1,19 @@
-        CHANGES IN spatstat.univar VERSION 2.0-3.001
+        CHANGES IN spatstat.univar VERSION 2.0-3.002
 
 OVERVIEW
 
+    o Abramson adaptive bandwidths
+    
     o Bug fix in weighted.quantile
 
+NEW FUNCTIONS
+
+    o bw.abram
+    Generic function for computing Abramson adaptive bandwidths.
+
+    o bw.abram.default
+    Default method for computing Abramson adaptive bandwidths for numerical data.
+    
 BUG FIXES
 
     o weighted.quantile
