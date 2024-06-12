@@ -1,4 +1,4 @@
-        CHANGES IN spatstat.univar VERSION 2.0-3.004
+        CHANGES IN spatstat.univar VERSION 2.0-3.005
 
 OVERVIEW
 
@@ -15,6 +15,9 @@ NEW FUNCTIONS
     Default method for computing Abramson adaptive bandwidths for numerical data.
     o densityAdaptiveKernel
     Generic function moved from spatstat.explore to spatstat.univar.
+
+    o rounding, rounding.default
+    Functions moved from spatstat.geom to spatstat.univar.
     
 BUG FIXES
 

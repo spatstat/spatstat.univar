@@ -91,6 +91,7 @@ CDF.density <- function(f, ..., warn=TRUE) {
   Fx <- Fx/Fx[nn]
   #' 
   FF <- approxfun(xx, Fx, method="linear", rule=2)
+  class(FF) <- c("interpolatedCDF", class(FF))
   return(FF)
 }
 
