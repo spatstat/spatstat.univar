@@ -27,7 +27,8 @@ and indefinite integrals.
 Some of the code has been extracted from `spatstat.geom`,
 `spatstat.random` and `spatstat.explore`, while some is new.
 
-Ultimately this package will become part of the `spatstat` family,
-and will be required by other members of the `spatstat` family.
-However, it is currently under development and is not required by
+**This package will become part of the `spatstat` family
+at the end of June 2024.**
+It will then be required by other members of the `spatstat` family.
+Until the end of June, it is under development and is not required by
 any other package. 
