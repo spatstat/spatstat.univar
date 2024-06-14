@@ -38,9 +38,9 @@ firstdigit(42)
 lastdigit(42)
 ndigits(42)
 
-firstdigit(-0.123)
-lastdigit(-0.123)
-ndigits(-0.123)
+firstdigit(-0.1234)
+lastdigit(-0.1234)
+ndigits(-0.1234)
 
 firstdigit(0)
 lastdigit(0)
