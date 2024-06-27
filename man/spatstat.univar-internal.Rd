@@ -9,6 +9,8 @@
 \alias{match.kernel}
 \alias{print.ewcdf}
 \alias{quantilefun.interpolatedCDF}
+\alias{IdenticalRowPair}
+\alias{IdenticalRows}
 \alias{StieltjesCalc}
 \alias{StieltjesCalc.stepfun}
 \description{
@@ -25,6 +27,8 @@ make.even.breaks(bmax, npos, bstep)
 match.kernel(kernel)
 \method{print}{ewcdf}(x, digits, \dots)
 \method{quantilefun}{interpolatedCDF}(x, \dots, type)
+IdenticalRowPair(i,j,a,b)
+IdenticalRows(i,j,a,b)
 StieltjesCalc(M, f, \dots)
 \method{StieltjesCalc}{stepfun}(M, f, \dots)
 }

@@ -1,12 +1,14 @@
-        CHANGES IN spatstat.univar VERSION 2.0-3.010
+        CHANGES IN spatstat.univar VERSION 2.0-3.011
 
 OVERVIEW
 
     o Abramson adaptive bandwidths.
 
-    o adaptive kernel smoothing.
+    o Adaptive kernel smoothing.
 
     o Digits in the decimal representation of a number.
+
+    o Unique representatives in a vector or data frame.
     
     o Bug fix in weighted.quantile.
 
@@ -27,6 +29,17 @@ NEW FUNCTIONS
 
     o firstdigit, lastdigit, ndigits
     Digits in the decimal representation of a number.
+
+    o uniquemap
+    Generic function moved from spatstat.geom to spatstat.univar.
+    
+    o uniquemap.default
+    Method for mapping duplicate entries to unique entries in a vector.
+    Moved from spatstat.geom to spatstat.univar.
+
+    o uniquemap.data.frame, uniquemap.matrix
+    Method for mapping duplicate rows to unique rows in a data frame.
+    Moved from spatstat.geom to spatstat.univar.
     
 BUG FIXES
 
