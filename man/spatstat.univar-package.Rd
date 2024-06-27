@@ -72,6 +72,14 @@
     extension of \code{\link[stats]{density.default}}
     allowing weights to be negative or zero.
     \cr
+    \code{\link{densityAdaptiveKernel}}
+    \tab
+    adaptive (variable-bandwidth) kernel estimate 
+    \cr
+    \code{\link{bw.abram.default}}
+    \tab
+    calculate data-dependent bandwidths using Abramson rule
+    \cr
     \code{\link{CDF.density}} \tab cumulative distribution function from
     kernel density estimate
   }
@@ -181,6 +189,21 @@
     \code{\link{stieltjes}} \tab Stieltjes integral
   }
 
+  \bold{Utilities}
+
+  A few utilities for numerical data are also provided.
+
+  \tabular{ll}{
+    \code{\link{uniquemap.default}} \tab map duplicates to unique entries \cr
+    \code{\link{rounding.default}} \tab determine whether values have
+    been rounded \cr
+    \code{\link{firstdigit}} \tab leading digit in decimal
+    representation \cr
+    \code{\link{lastdigit}} \tab least significant digit in decimal
+    representation \cr
+    \code{\link{ndigits}} \tab number of digits in decimal
+    representation
+  }
 }
 \section{Licence}{
   This library and its documentation are usable under the terms of the "GNU 
