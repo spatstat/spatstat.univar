@@ -35,7 +35,7 @@
   \item{type}{
     Integer specifying the type of quantile to be calculated,
     as explained in \code{\link[stats]{quantile.default}}.
-    Only types 1 and 2 are currently implemented.
+    Only types 1, 2 and 4 are currently implemented.
   }
 }
 \details{

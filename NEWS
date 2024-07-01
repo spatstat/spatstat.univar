@@ -1,10 +1,13 @@
-        CHANGES IN spatstat.univar VERSION 3.0-0.001
+        CHANGES IN spatstat.univar VERSION 3.0-0.002
 
 OVERVIEW
 
-    o Extended `quantilefun`
+    o quantiles using linear approximation
 
 SIGNIFICANT USER-VISIBLE CHANGES
+
+    o quantile.ecdf, quantile.ewcdf
+    Now supports type=4 (linear interpolation).
 
     o quantilefun.ecdf, quantilefun.ewcdf
     Now supports type=4 (linear interpolation).
