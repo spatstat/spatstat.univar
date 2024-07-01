@@ -1,5 +1,8 @@
 # spatstat.univar
 
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/spatstat.univar)](http://CRAN.R-project.org/package=spatstat.univar) 
+[![GitHub R package version](https://img.shields.io/github/r-package/v/spatstat/spatstat.univar)](https://github.com/spatstat/spatstat.univar)
+
 This is a nascent member of the `spatstat` package family.
 It contains code for estimation of univariate probability distributions,
 including:
