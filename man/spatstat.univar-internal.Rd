@@ -5,6 +5,8 @@
 \alias{breakpts.from.r}
 \alias{check.hist.lengths}
 \alias{km.rs.opt}
+\alias{knots.ecdf}
+\alias{knots.ewcdf}
 \alias{make.even.breaks}
 \alias{match.kernel}
 \alias{print.ewcdf}
@@ -23,6 +25,8 @@ breakpts.from.r(r)
 check.hist.lengths(hist, breaks)
 make.even.breaks(bmax, npos, bstep)
 km.rs.opt(o, cc, d, breaks, KM, RS)
+\method{knots}{ecdf}(Fn, \dots)
+\method{knots}{ewcdf}(Fn, \dots)
 make.even.breaks(bmax, npos, bstep)
 match.kernel(kernel)
 \method{print}{ewcdf}(x, digits, \dots)

@@ -184,6 +184,10 @@ mean.ecdf <- mean.ewcdf <- function(x, trim=0, ...) {
   sum(xx * dF)/sum(dF)
 }
 
+knots.ecdf <- knots.ewcdf <- function(Fn, ...) {
+  eval(expression(x), envir=environment(Fn))
+}
+
 quantilefun <- function(x, ...) {
   UseMethod("quantilefun")
 }
