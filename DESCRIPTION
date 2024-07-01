@@ -1,6 +1,6 @@
 Package: spatstat.univar
-Version: 3.0-0
-Date: 2024-06-28
+Version: 3.0-0.001
+Date: 2024-07-01
 Title: One-Dimensional Probability Distribution Support for the 'spatstat' Family 
 Authors@R: c(person("Adrian", "Baddeley", 
                     role = c("aut", "cre", "cph"),

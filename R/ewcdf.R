@@ -1,7 +1,7 @@
 #
 #     ewcdf.R
 #
-#     $Revision: 1.27 $  $Date: 2023/01/15 02:56:05 $
+#     $Revision: 1.28 $  $Date: 2024/07/01 06:54:39 $
 #
 #  With contributions from Kevin Ummel
 #
@@ -183,20 +183,39 @@ quantilefun <- function(x, ...) {
 quantilefun.ewcdf <- quantilefun.ecdf <- quantilefun.interpolatedCDF <- function(x, ..., type=1) {
   ## inverse CDF
   trap.extra.arguments(..., .Context="quantilefun")
-  if(!(type %in% c(1,2)))
-    stop("Only quantiles of type 1 and 2 are implemented", call.=FALSE)
+  if(is.na(m <- match(type, c(1,2,4))))
+    stop("Argument 'type' must equal 1, 2 or 4", call.=FALSE)
+  type <- c(1,2,4)[m]
   env <- environment(x)
-  qq <- get("x", envir=env)
-  pp <- get("y", envir=env)
+  qq <- get("x", envir = env)
+  pp <- get("y", envir = env)
   ok <- !duplicated(pp)
   qq <- qq[ok]
   pp <- pp[ok]
-  if(length(pp) == 1) {
-    pp <- c(0,pp)
+  if (length(pp) == 1) {
+    pp <- c(0, pp)
     qq <- rep(qq, 2)
-  } 
-  f <- switch(type, 0, 1/2)
-  xinverse <- approxfun(pp, qq, f=f, rule=2)
-  return(xinverse)
+  }
+  #'
+  n <- length(pp)
+  result <- switch(as.character(type),
+                   "1" = {
+                     approxfun(pp, qq, method="constant", f=1,
+                               ties="ordered", rule=2)
+                   },
+                   "2" = {
+                     function(p) {
+                       j <- approx(pp, 1:n, xout=p, method="constant", f=0,
+                                   ties="ordered", rule=2)$y
+                       j <- as.integer(j)
+                       g <- p - pp[j]
+                       jplus1 <- pmin(j+1, n)
+                       z <- ifelse(g == 0, (qq[j]+qq[jplus1])/2, qq[jplus1])
+                       return(z)
+                     }
+                   },
+                   "4" = approxfun(pp, qq, method="linear", 
+                                   ties="ordered", rule=2))
+  return(result)
 }
 
