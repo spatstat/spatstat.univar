@@ -1,8 +1,16 @@
-        CHANGES IN spatstat.univar VERSION 3.0-0.003
+        CHANGES IN spatstat.univar VERSION 3.0-1
 
 OVERVIEW
 
-    o quantiles using linear approximation
+    o quantiles using linear approximation.
+
+    o extract the knots of a weighted CDF
+
+NEW FUNCTIONS
+
+    o knots.ewcdf
+    Method for generic 'knots' for extracting the jump points of a weighted
+    cumulative distribution function (object of class 'ewcdf').
 
 SIGNIFICANT USER-VISIBLE CHANGES
 
