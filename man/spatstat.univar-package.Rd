@@ -95,6 +95,7 @@
     function \cr
     \code{\link{mean.ewcdf}} \tab mean of weighted ecdf \cr
     \code{\link{quantile.ewcdf}} \tab quantiles of weighted ecdf \cr
+    \code{\link{knots.ewcdf}} \tab jump points of weighted ecdf \cr
     \code{\link{weighted.median}} \tab weighted median of numeric values \cr
     \code{\link{weighted.quantile}} \tab weighted quantile of numeric values \cr
   }
