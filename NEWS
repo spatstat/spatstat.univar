@@ -1,8 +1,16 @@
-        CHANGES IN spatstat.univar VERSION 3.0-1.001
+        CHANGES IN spatstat.univar VERSION 3.0-1.002
 
 OVERVIEW
 
     o Minor improvements to documentation.
+
+    o Bandwidth selection by non-random bootstrap.
+    
+NEW FUNCTIONS
+
+    o bw.taylor
+    Bandwidth selection for kernel density estimation
+    using Taylor's non-random bootstrap 
     
         CHANGES IN spatstat.univar VERSION 3.0-1
 

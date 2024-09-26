@@ -14,6 +14,7 @@
 
 */
 
+void taylorboot(double *, int *, double *, int *, double *);
 void tabsumweight(int *, double *, double *, int *, double *, double *);
 void hotrodInsul(int *, double *, double *, double *, double *, int *, double *); 
 void hotrodAbsorb(int *, double *, double *, double *, double *, int *, double *);

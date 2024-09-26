@@ -20,6 +20,7 @@ static const R_CMethodDef CEntries[] = {
     {"hotrodAbsorb", (DL_FUNC) &hotrodAbsorb, 7},
     {"hotrodInsul",  (DL_FUNC) &hotrodInsul,  7},
     {"tabsumweight", (DL_FUNC) &tabsumweight, 6},
+    {"taylorboot",   (DL_FUNC) &taylorboot,   5},
     {NULL, NULL, 0}
 };
 
