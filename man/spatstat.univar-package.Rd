@@ -18,6 +18,8 @@
   \describe{
     \item{kernel density estimation:}{
       including
+      variable-bandwidth kernels, boundary correction,
+      bandwidth selection,
       unnormalised weighted densities, and cumulative distribution
       functions of density estimates.
     }
@@ -72,9 +74,18 @@
     extension of \code{\link[stats]{density.default}}
     allowing weights to be negative or zero.
     \cr
+    \code{\link{densityBC}}
+    \tab
+    fixed-bandwidth kernel estimate with optional boundary correction
+    \cr
     \code{\link{densityAdaptiveKernel}}
     \tab
-    adaptive (variable-bandwidth) kernel estimate 
+    adaptive (variable-bandwidth) kernel estimation (generic)
+    \cr
+    \code{\link{densityAdaptiveKernel.default}}
+    \tab
+    adaptive (variable-bandwidth) kernel estimate
+    (method for numeric data, with optional boundary correction)
     \cr
     \code{\link{bw.abram.default}}
     \tab
@@ -166,6 +177,10 @@
     \code{\link{kernel.squint}}
     \tab
     integral of squared kernel
+    \cr
+    \code{\link{dkernelBC}}
+    \tab
+    evaluate the kernel with boundary correction
   }
 
   \bold{Heat kernels}

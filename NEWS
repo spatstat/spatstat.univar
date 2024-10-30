@@ -1,17 +1,29 @@
-        CHANGES IN spatstat.univar VERSION 3.0-1.002
+        CHANGES IN spatstat.univar VERSION 3.0-1.003
 
 OVERVIEW
 
+    o Boundary-corrected kernel density estimation on the positive half-line.
+    
+    o Bandwidth selection by non-random bootstrap.
+
     o Minor improvements to documentation.
 
-    o Bandwidth selection by non-random bootstrap.
-    
 NEW FUNCTIONS
 
     o bw.taylor
     Bandwidth selection for kernel density estimation
     using Taylor's non-random bootstrap 
-    
+
+    o densityBC
+    An extension of density.default that includes boundary corrections
+    for truncation of the density to the positive half line.
+
+    o densityAdaptiveKernel.default
+    Variable-bandwidth boundary-corrected kernel density estimation
+
+    o dkernelBC
+    Evaluate the boundary corrected kernel
+
         CHANGES IN spatstat.univar VERSION 3.0-1
 
 OVERVIEW

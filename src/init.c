@@ -17,10 +17,20 @@
 */
 
 static const R_CMethodDef CEntries[] = {
-    {"hotrodAbsorb", (DL_FUNC) &hotrodAbsorb, 7},
-    {"hotrodInsul",  (DL_FUNC) &hotrodInsul,  7},
-    {"tabsumweight", (DL_FUNC) &tabsumweight, 6},
-    {"taylorboot",   (DL_FUNC) &taylorboot,   5},
+    {"adaptiveKDE",     (DL_FUNC) &adaptiveKDE,      9},
+    {"adaptKDEbdry",    (DL_FUNC) &adaptKDEbdry,     9},
+    {"adaptKDEconvol",  (DL_FUNC) &adaptKDEconvol,   9},
+    {"adaptKDEreflect", (DL_FUNC) &adaptKDEreflect,  9},
+    {"adaptKDEweight",  (DL_FUNC) &adaptKDEweight,   9},
+    {"bcolonel",        (DL_FUNC) &bcolonel,        13},
+    {"colonel",         (DL_FUNC) &colonel,          8},
+    {"fbcolonel",       (DL_FUNC) &fbcolonel,       13},
+    {"fcolonel",        (DL_FUNC) &fcolonel,         8},
+    {"hotrodAbsorb",    (DL_FUNC) &hotrodAbsorb,     7},
+    {"hotrodInsul",     (DL_FUNC) &hotrodInsul,      7},
+    {"kermom",          (DL_FUNC) &kermom,           8},
+    {"tabsumweight",    (DL_FUNC) &tabsumweight,     6},
+    {"taylorboot",      (DL_FUNC) &taylorboot,       5},
     {NULL, NULL, 0}
 };
 

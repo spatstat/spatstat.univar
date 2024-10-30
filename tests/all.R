@@ -79,7 +79,7 @@ local({
 #
 # Testing the response to the presence of NA's in covariates
 #
-# $Revision: 1.9 $ $Date: 2023/11/05 01:45:36 $
+# $Revision: 1.10 $ $Date: 2024/09/30 23:13:54 $
 
 if(FULLTEST) {
 local({
@@ -91,3 +91,111 @@ local({
   qf <- quantile(f, probs=c(0.1, NA, 0.8))
 })
 }
+
+#' tests/direct.R
+#'
+#' Check output of densityBC() by comparing with
+#' kernel estimates computed directly in R code.
+#'
+#' $Revision: 1.2 $ $Date: 2023/10/22 02:39:35 $
+
+INTERACTIVE <- FALSE
+
+#' ...... direct implementation ........................
+#'
+#' Biweight boundary kernel (for estimation at point r)
+
+bdry.bwt <- function(x,r,h=1){
+		u <- x/h
+		k <- (15/(16*h))*(1-u^2)^2*(u^2<1)
+		p <- r/h
+		p[p>1] <- 1
+		a0 <- (3*p^5 - 10*p^3 + 15*p + 8)/16
+		a1 <- (5*p^6 - 15*p^4 + 15*p^2 -5)/32
+		a2 <- (15*p^7 - 42*p^5 + 35*p^3 + 8)/112
+		bk <- (a2-a1*u)*k*(u<p)/(a0*a2-a1^2)
+		bk
+}
+
+#' Standard biweight kernel
+
+bwt <- function(x,r,h=1){
+  # r is ignored
+		u <- x/h
+		k <- (15/(16*h))*(1-u^2)^2*(u^2<1)
+		k
+}
+
+#' Kernel estimate 
+
+kernR <- function(x, h, kname="bwt", from, to, nr=200) {
+  ker <- get(kname, mode="function")
+  fhat <- numeric(0)
+  rvalues <- seq(from, to, length=nr)
+  for (r in rvalues) 
+    fhat <- c(fhat,mean(ker(r-x, r, h=h)))
+  return(list(x=rvalues, y=fhat))
+}
+
+#' ...................... RUN EXAMPLE .......................
+
+sim.dat <- rexp(500)
+
+from <- 0.01
+to <- 5
+nr <- 200
+
+if(INTERACTIVE) opa <- par(ask=TRUE)
+
+cat("--- Fixed bandwidth ---\n")
+
+fhatR <- kernR(sim.dat, 0.4, "bwt", from=from, to=to, nr=nr)
+fhatC <- densityBC(sim.dat, "biweight", h=0.4, from=from, to=to, n=nr)
+
+stopifnot(length(fhatR$x) == length(fhatC$x))
+stopifnot(all(fhatR$x == fhatC$x))
+rvalues <- fhatR$x
+ftrue <- dexp(rvalues)
+
+if(INTERACTIVE) {
+  plot(c(from, to), c(0, 1.1), type="n", xlab="r", ylab="density",
+       main="Fixed bandwidth")
+  lines(rvalues, fhatR$y, col=1)
+  lines(rvalues, fhatC$x, col=2)
+  lines(rvalues, ftrue, col=3)
+}
+
+cat("Range of absolute discrepancies between estimates (fixed bandwidth):\n")
+print(range(fhatC$y - fhatR$y))
+
+cat("\n--- Boundary kernel ---\n")
+
+fhat.R <- kernR(sim.dat, 0.4, "bdry.bwt", from=from, to=to, nr=nr)
+fhat.C <- densityBC(sim.dat, "biweight", h=0.4, from=from, to=to, n=nr,
+                  zerocor="bdrykern")
+
+stopifnot(length(fhat.R$x) == length(fhat.C$x))
+stopifnot(all(fhat.R$x == fhat.C$x))
+
+rvalues <- fhat.R$x
+ftrue <- dexp(rvalues)
+
+if(INTERACTIVE) {
+  plot(c(from, to), c(0, 1.1), type="n", xlab="r", ylab="density",
+       main="Boundary kernel")
+  lines(rvalues, fhat.R$y, col=1)
+  lines(rvalues, fhat.C$y, col=2)
+  lines(rvalues, ftrue, col=3)
+}
+
+cat("Range of absolute discrepancies between estimates (boundary kernel):\n")
+print(range(fhat.C$y - fhat.R$y))
+
+rel.discrep <- (fhat.C$y - fhat.R$y)/ftrue
+rel.discrep <- rel.discrep[ftrue > 0.1]
+cat("Range of relative discrepancies between estimates (boundary kernel):\n")
+print(range(rel.discrep))
+if(max(abs(rel.discrep)) > 0.01)
+  stop("Relative discrepancies between C and R code exceed 1 percent")
+
+if(INTERACTIVE) par(opa)

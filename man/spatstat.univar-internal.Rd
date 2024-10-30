@@ -4,10 +4,13 @@
 \alias{breakpts}
 \alias{breakpts.from.r}
 \alias{check.hist.lengths}
+\alias{check.bandwidth}
+\alias{kermom}
 \alias{km.rs.opt}
 \alias{knots.ecdf}
 \alias{make.even.breaks}
 \alias{match.kernel}
+\alias{plot.adaptivedensity}
 \alias{print.ewcdf}
 \alias{quantilefun.interpolatedCDF}
 \alias{IdenticalRowPair}
@@ -22,11 +25,13 @@ as.breakpts(\dots)
 breakpts(val, maxi, even, npos, step)
 breakpts.from.r(r)
 check.hist.lengths(hist, breaks)
-make.even.breaks(bmax, npos, bstep)
+check.bandwidth(bw, descrip, fatal)
+kermom(m, r, kernel, mean, sd)
 km.rs.opt(o, cc, d, breaks, KM, RS)
 \method{knots}{ecdf}(Fn, \dots)
 make.even.breaks(bmax, npos, bstep)
 match.kernel(kernel)
+\method{plot}{adaptivedensity}(x, \dots, xlab)
 \method{print}{ewcdf}(x, digits, \dots)
 \method{quantilefun}{interpolatedCDF}(x, \dots, type)
 IdenticalRowPair(i,j,a,b)
