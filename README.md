@@ -17,6 +17,10 @@ from right-censored data;
 - *quantiles* 
 including calculation of quantiles from an empirical cumulative
 distribution or a kernel density estimate;
+- *kernel density estimation*
+for one dimensional probability densities, including
+fixed- and variable-bandwidth kernel estimators,
+and boundary corrections for densities restricted to the positive half-line;
 - *kernels* 
 including calculation of the probability density, cumulative distribution
 function, quantiles, random generation, moments and partial
