@@ -30,7 +30,12 @@ kermom <- function(m, r, kernel="gaussian", mean = 0,
           y = as.double(numeric(nr)),
           errcode = as.integer(integer(1)),
           PACKAGE="spatstat.univar")
-  if(z$errcode != 0) stop(paste("Error code", z$errcode))
+  if(z$errcode != 0)
+    switch(z$errcode,
+           stop("Error in C: negative length"),
+           stop("Error in C: unrecognised kernel"),
+           stop("Error in C: value of m is not supported"),
+           stop(paste("Error in C: error code", z$errcode)))
   return(z$y)
 }
 

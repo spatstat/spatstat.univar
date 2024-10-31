@@ -199,3 +199,33 @@ if(max(abs(rel.discrep)) > 0.01)
   stop("Relative discrepancies between C and R code exceed 1 percent")
 
 if(INTERACTIVE) par(opa)
+
+#' tests/kermom.R
+#'
+#' Check R function kernel.moment() against C function kermom ()
+#'
+#' $Revision: 1.2 $ $Date: 2024/10/31 10:36:27 $
+#'
+
+moo <- 1
+sdee <- 0.5
+xx <- seq(moo - 4 * sdee, moo + 4 * sdee, length=512)
+
+kernames <- c("gaussian", "rectangular", "triangular",
+              "epanechnikov", "biweight", "cosine", "optcosine")
+
+eps <- sqrt(.Machine$double.eps)
+
+for(m in 0:2) {
+  cat("Incomplete moment of order", m, fill=TRUE)
+  for(ker in kernames) {
+    Rvalues <- kernel.moment(m, xx, ker, mean=moo, sd=sdee)
+    Cvalues <- kermom(m, xx, ker, mean=moo, sd=sdee)
+    discrep <- max(abs(Rvalues-Cvalues))
+    if(discrep > eps) 
+      stop(paste("kernel.moment and kermom disagree",
+                 "for m =", m, "for kernel", sQuote(ker),
+                 "\n\tDiscrepancy", discrep))
+    cat("Kernel", sQuote(ker), "\tdiscrepancy", discrep, fill=TRUE)
+  }
+}
