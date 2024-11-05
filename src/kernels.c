@@ -38,7 +38,7 @@
 */
 
 #include <Rmath.h>
-double sqrt(), exp(), cos(), sin();
+double sqrt(double), exp(double), cos(double), sin(double);
 
 #include "kerconstants.h"
 

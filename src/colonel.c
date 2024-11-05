@@ -38,7 +38,7 @@
 #define QUARTER_PI M_PI_4
 #define RECIPROCAL_SQRT_TWO_PI M_1_SQRT_2PI  
 
-double sqrt(), exp(), cos();
+double sqrt(double), exp(double), cos(double);
 
 #define ABS(X) (((X) < 0) ? (-(X)) : (X))
 #define INSIDE(X)  (((X) >= -1) && ((X) <= 1))

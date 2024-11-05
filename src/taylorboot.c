@@ -14,12 +14,14 @@
   Copyright (c) 2024 Adrian Baddeley and Tilman M Davies 
   GNU Public Licence GPL (>= 2.0)
 
+  $Revision: 1.2 $ $Date: 2024/11/05 03:40:00 $
+
 */
 
 #include <R.h>
 #include <Rmath.h>
 
-double exp();
+double exp(double);
 
 void taylorboot(
 		double *x,    /* data */
