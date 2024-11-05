@@ -1,4 +1,4 @@
-        CHANGES IN spatstat.univar VERSION 3.0-1.004
+        CHANGES IN spatstat.univar VERSION 3.1-0
 
 OVERVIEW
 
@@ -19,7 +19,8 @@ NEW FUNCTIONS
     for truncation of the density to the positive half line.
 
     o densityAdaptiveKernel.default
-    Variable-bandwidth boundary-corrected kernel density estimation
+    Variable-bandwidth kernel density estimation,
+    with optional boundary correction. 
 
     o dkernelBC
     Evaluate the boundary corrected kernel
