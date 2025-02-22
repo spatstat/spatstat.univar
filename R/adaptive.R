@@ -3,6 +3,10 @@
 #'
 #'  Adaptive kernel smoothing
 #'
+#' 
+#' Copyright (c) 2024 Adrian Baddeley, Tilman Davies and Martin Hazelton
+#' GNU Public Licence >= 2.0
+#' 
 
 densityAdaptiveKernel <- function(X, ...) {
   UseMethod("densityAdaptiveKernel")
@@ -64,6 +68,8 @@ densityAdaptiveKernel.default <-
     bw <- bw.abram.default(X, at="data", ...)
   } else if(is.character(bw) && length(bw) == 1) {
     switch(bw,
+           adist = ,       # legacy
+           bw.adist = ,    # legacy
            pow = ,
            bw.pow = {
              bw <- bw.pow(X,...)
