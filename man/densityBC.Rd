@@ -83,47 +83,67 @@
   }
 }
 \details{
-  If \code{zerocor} is absent or given as \code{"none"},
+  If \code{zerocor} is missing, or given as \code{"none"},
   this function computes the fixed bandwidth kernel estimator of the
   probability density on the real line. 
 
   If \code{zerocor} is given, it is assumed that the density
   is confined to the positive half-line, and a boundary correction is
-  applied:
+  applied to compensate for bias arising due to truncation at the origin:
   \describe{
-    \item{weighted}{The contribution from each point \eqn{x_i}{x[i]}
+    \item{\code{zerocor="weighted"}:}{
+      The contribution from each data point \eqn{x_i}{x[i]}
       is weighted by the factor \eqn{1/m(x_i)}{1/m(x[i])}
       where \eqn{m(x) = 1 - F(-x)} is the total mass of the kernel centred on
       \eqn{x} that lies in the positive half-line, and \eqn{F(x)} is the
-      cumulative distribution function of the kernel}
-    \item{convolution}{The estimate of the density \eqn{f(r)} is
+      cumulative distribution function of the kernel.
+      This is the \dQuote{cut-and-normalization} method of
+      Gasser and \ifelse{latex}{\out{M\"{u}ller}}{Mueller} (1979).
+      Effectively the kernel is renormalized so that it integrates to 1,
+      and the adjusted kernel conserves mass.
+    }
+    \item{\code{zerocor="convolution"}:}{
+      The estimate of the density \eqn{f(r)} is
       weighted by the factor \eqn{1/m(r)} where \eqn{m(r) = 1 - F(-r)}
       is given above.
+      This is the \dQuote{convolution}, \dQuote{uniform}
+      or \dQuote{zero-order} boundary correction method
+      often attributed to Diggle (1985).
+      This correction does not conserve mass.
     }
-    \item{reflection}{
+    \item{\code{zerocor="reflection"}:}{
       if the kernel centred at data point \eqn{x_i}{x[i]}
       has a tail that lies on the negative half-line, this tail is
       reflected onto the positive half-line.
+      This is the reflection method first proposed by
+      Boneva et al (1971).
+      This correction conserves mass.
     }
-    \item{bdrykern}{The density estimate is computed using the
-      Boundary Kernel associated with the chosen kernel
+    \item{\code{zerocor="bdrykern"}:}{
+      The density estimate is computed using the
+      Linear Boundary Kernel associated with the chosen kernel
       (Wand and Jones, 1995, page 47).
       That is, when estimating the density \eqn{f(r)} for values of
       \eqn{r} close to zero (defined as \eqn{r < h} for all kernels
       except the Gaussian), the kernel contribution
       \eqn{k_h(r - x_i)}{k[h](r - x[i])} is multiplied by a
-      term that is a linear function of \eqn{r - x_i}{r - x[i]}.
+      term that is a linear function of \eqn{r - x_i}{r - x[i]},
+      with coefficients depending on \eqn{r}.
+      This correction does not conserve mass and may result in
+      negative values, but is asymptotically optimal.
     }
-    \item{JonesFoster}{
+    \item{\code{zerocor="JonesFoster"}:}{
       The modification of the Boundary Kernel estimate
-      proposed by Jones and Foster (1996), equal to
+      proposed by Jones and Foster (1996) is computed. This is equal to
       \eqn{
 	\overline f(r) \exp( \hat f(r)/\overline f(r) - 1)
       }{
 	f#(r) exp(f*(r)/f#(r) - 1)
       }
       where \eqn{\overline f(r)}{f#(r)} is the convolution estimator
-      and \eqn{\hat f(r)}{f*(r)} is the boundary kernel estimator.
+      and \eqn{\hat f(r)}{f*(r)} is the linear boundary kernel estimator.
+      This ensures that the estimate is always nonnegative
+      and retains the asymptotic optimality of the linear boundary kernel.
     }
   }
   If \code{fast=TRUE}, the calculations are performed rapidly using 
@@ -151,6 +171,23 @@
 }
 \references{
   \ournewpaper
+
+  Boneva, L.I., Kendall, D.G. and Stefanov, I. (1971)
+  Spline transformations: three new diagnostic aids for the
+  statistical data-analyst (with discussion).
+  \emph{Journal of the Royal Statistical Society, Series B},
+  \bold{33}, 1–-70.
+
+  Diggle, P.J. (1985)
+  A kernel method for smoothing point process data.
+  \emph{Journal of the Royal Statistical Society, Series C (Applied Statistics)}, 
+  \bold{34} 138–-147.
+  
+  Gasser, Th. and \ifelse{latex}{\out{M\"{u}ller}}{Mueller}, H.-G. (1979).
+  Kernel estimation of regression functions.
+  In Th. Gasser and M. Rosenblatt (editors)
+  \emph{Smoothing Techniques for Curve Estimation}, pages
+  23-–68. Springer, Berlin.
 
   Jones, M.C. and Foster, P.J. (1996)
   A simple nonnegative boundary correction method for kernel density
