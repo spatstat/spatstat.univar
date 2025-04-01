@@ -2,6 +2,7 @@
 
 ## ................  Import packages ..................
 
+importFrom(graphics, "plot.function")
 import(stats)
 import(spatstat.utils)
 
@@ -61,7 +62,9 @@ export("mean.ewcdf")
 export("ndigits")
 export("pkernel")
 export("plot.adaptivedensity")
+export("plot.interpolatedCDF")
 export("print.ewcdf")
+export("print.interpolatedCDF")
 export("qkernel")
 export("quantile.density")
 export("quantile.ewcdf")
@@ -102,7 +105,9 @@ S3method("knots", "ecdf")
 S3method("mean", "ecdf")
 S3method("mean", "ewcdf")
 S3method("plot", "adaptivedensity")
+S3method("plot", "interpolatedCDF")
 S3method("print", "ewcdf")
+S3method("print", "interpolatedCDF")
 S3method("quantile", "density")
   S3method("quantile", "ewcdf")
   S3method("quantilefun", "ecdf")

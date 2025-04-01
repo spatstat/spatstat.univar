@@ -1,3 +1,17 @@
+        CHANGES IN spatstat.univar VERSION 3.1-2.001
+
+OVERVIEW
+
+    o More support for 'interpolatedCDF' objects.
+    
+NEW FUNCTIONS
+
+    o plot.interpolatedCDF
+    Plot method for interpolatedCDF objects.
+
+    o print.interpolatedCDF
+    Print method for interpolatedCDF objects.
+
         CHANGES IN spatstat.univar VERSION 3.1-2
 
 OVERVIEW

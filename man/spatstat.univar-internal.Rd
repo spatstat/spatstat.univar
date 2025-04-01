@@ -11,6 +11,8 @@
 \alias{make.even.breaks}
 \alias{match.kernel}
 \alias{plot.adaptivedensity}
+\alias{plot.interpolatedCDF}
+\alias{print.interpolatedCDF}
 \alias{print.ewcdf}
 \alias{quantilefun.interpolatedCDF}
 \alias{IdenticalRowPair}
@@ -32,6 +34,8 @@ km.rs.opt(o, cc, d, breaks, KM, RS)
 make.even.breaks(bmax, npos, bstep)
 match.kernel(kernel)
 \method{plot}{adaptivedensity}(x, \dots, xlab)
+\method{plot}{interpolatedCDF}(x, \dots)
+\method{print}{interpolatedCDF}(x, \dots)
 \method{print}{ewcdf}(x, digits, \dots)
 \method{quantilefun}{interpolatedCDF}(x, \dots, type)
 IdenticalRowPair(i,j,a,b)

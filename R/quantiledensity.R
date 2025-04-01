@@ -5,7 +5,7 @@
 #'
 #'  Also a CDF from a 'density'
 #' 
-#'  $Revision: 1.4 $ $Date: 2023/09/18 06:34:53 $
+#'  $Revision: 1.5 $ $Date: 2025/04/01 02:43:51 $
 
 quantile.density <- local({
 
@@ -95,3 +95,21 @@ CDF.density <- function(f, ..., warn=TRUE) {
   return(FF)
 }
 
+print.interpolatedCDF <- function(x, ...)  {
+  splat("Smooth estimate of cumulative distribution function")
+  xrange <- range(get("x", envir=environment(x)))
+  splat("Domain of x values:", prange(signif(xrange, 6)))
+  NextMethod("print")
+}
+
+plot.interpolatedCDF <- function(x, ...)  {
+  xname <- short.deparse(substitute(x))
+  xrange <- range(get("x", envir=environment(x)))
+  do.call(plot.function,
+          resolve.defaults(x=quote(x),
+                           list(...),
+                           list(xlim=xrange,
+                                xlab=expression(x),
+                                ylab=expression(F(x)),
+                                main=xname)))
+}
