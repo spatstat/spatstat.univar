@@ -10,7 +10,7 @@
   weights associated with them.
 }
 \usage{
-weighted.median(x, w, na.rm = TRUE, type=2, collapse=TRUE)
+weighted.median(x, w, na.rm = TRUE, type=4, collapse=TRUE)
 
 weighted.quantile(x, w, probs=seq(0,1,0.25), na.rm = TRUE, type=4, collapse=TRUE)
 
@@ -39,7 +39,11 @@ weighted.var(x, w, na.rm = TRUE)
     The only valid choices are \code{type=1}, \code{2} or \code{4}.
     See Details.
   }
-  \item{collapse}{Research use only.}
+  \item{collapse}{Logical value specifying whether
+    duplicated values in \code{x} should be pooled (replacing them by
+    a unique \code{x} value whose weight is the sum of the associated
+    weights).
+  }
 }
 \details{
   The \code{i}th observation \code{x[i]} is treated as having
@@ -62,13 +66,13 @@ weighted.var(x, w, na.rm = TRUE)
     inverses);
     \item if \code{type=4}, linear interpolation is performed.
   }
-
-  Note that the default rule for \code{weighted.median} is
-  \code{type=2}, consistent with the traditional definition of the median, 
-  while the default for \code{weighted.quantile} is \code{type=4}.
+  The settings \code{type=4} and \code{collapse=FALSE}
+  are consistent with the traditional definition of the median.
 }
 \value{
-  A numeric value or vector.
+  \code{weighted.median} returns a numeric value.
+  \code{weighted.quantile} returns a numeric vector
+  of the same length as \code{probs}.
 }
 \author{
   \adrian.

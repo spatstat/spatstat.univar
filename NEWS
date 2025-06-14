@@ -1,3 +1,15 @@
+        CHANGES IN spatstat.univar VERSION 3.1-3.001
+
+OVERVIEW
+
+    o Changed default rule for weighted median.
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o weighted.median
+    Default rule changed to 'type=4', consistent with 'weighted.quantile'.
+    Documentation corrected.
+    
         CHANGES IN spatstat.univar VERSION 3.1-3
 
 OVERVIEW

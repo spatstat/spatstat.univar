@@ -64,7 +64,7 @@ weighted.var <- function(x, w, na.rm=TRUE) {
 
 #' weighted median
 
-weighted.median <- function(x, w, na.rm=TRUE, type=2, collapse=TRUE) {
+weighted.median <- function(x, w, na.rm=TRUE, type=4, collapse=TRUE) {
   unname(weighted.quantile(x, probs=0.5, w=w, na.rm=na.rm, type=type, collapse=collapse))
 }
 
