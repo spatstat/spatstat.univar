@@ -10,7 +10,7 @@
   weights associated with them.
 }
 \usage{
-weighted.median(x, w, na.rm = TRUE, type=4, collapse=TRUE)
+weighted.median(x, w, na.rm = TRUE, type=2, collapse=TRUE)
 
 weighted.quantile(x, w, probs=seq(0,1,0.25), na.rm = TRUE, type=4, collapse=TRUE)
 
@@ -36,7 +36,7 @@ weighted.var(x, w, na.rm = TRUE)
     Integer specifying the rule for calculating the median or quantile,
     corresponding to the rules available for
     \code{\link[stats]{quantile}}.
-    The only valid choices are \code{type=1}, \code{2} or \code{4}.
+    The currently available choices are \code{type=1}, \code{2} or \code{4}.
     See Details.
   }
   \item{collapse}{Logical value specifying whether
@@ -55,19 +55,29 @@ weighted.var(x, w, na.rm = TRUE)
   probability \code{p} is a value \code{q} 
   such that the total weight of data less than or equal to \code{q}
   is equal to \code{p} times the total weight.
-  
-  If there is no such value, then
+
+  If one of the data values does satisfy this requirement, then
   \itemize{
-    \item if \code{type=1}, the next largest value is returned
-    (this is the right-continuous inverse of the left-continuous
-    cumulative distribution function);
-    \item if \code{type=2}, the average of the two surrounding values is
-    returned (the average of the right-continuous and left-continuous
-    inverses);
-    \item if \code{type=4}, linear interpolation is performed.
+    \item if \code{type=1} or \code{type=4}, this value is returned;
+    \item if \code{type=2}, 
+    the average of this value and the next largest value is returned.
   }
-  The settings \code{type=4} and \code{collapse=FALSE}
-  are consistent with the traditional definition of the median.
+
+  If there is no such value, then 
+  \itemize{
+    \item if \code{type=1} or \code{type=2}, the next largest value is returned;
+    \item if \code{type=4}, the result is a value obtained by
+    linearly interpolating between the next smallest and next largest values.
+  }
+
+  Type 1 is the right-continuous inverse of the weighted
+  cumulative distribution function. 
+
+  Type 2 (with \code{collapse=FALSE}) is consistent with the
+  traditional definition of the sample median.
+
+  Note that the default settings are different for \code{weighted.median}
+  and \code{weighted.quantile}.
 }
 \value{
   \code{weighted.median} returns a numeric value.

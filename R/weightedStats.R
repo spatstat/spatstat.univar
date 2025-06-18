@@ -3,7 +3,7 @@
 #'
 #'   weighted versions of hist, var, median, quantile
 #'
-#'  $Revision: 1.11 $  $Date: 2024/05/06 00:50:47 $
+#'  $Revision: 1.13 $  $Date: 2025/06/18 03:26:56 $
 #'
 
 
@@ -64,7 +64,7 @@ weighted.var <- function(x, w, na.rm=TRUE) {
 
 #' weighted median
 
-weighted.median <- function(x, w, na.rm=TRUE, type=4, collapse=TRUE) {
+weighted.median <- function(x, w, na.rm=TRUE, type=2, collapse=TRUE) {
   unname(weighted.quantile(x, probs=0.5, w=w, na.rm=na.rm, type=type, collapse=collapse))
 }
 
@@ -76,9 +76,9 @@ weighted.quantile <- function(x, w, probs=seq(0,1,0.25), na.rm=TRUE, type=4, col
   if(length(x) == 0)
     stop("No data given")
   stopifnot(length(x) == length(w))
-  if(is.na(m <- match(type, c(1,2,4))))
-    stop("Argument 'type' must equal 1, 2 or 4", call.=FALSE)
-  type <- c(1,2,4)[m]
+  if(is.na(m <- match(type, c(1,2,3,4))))
+    stop("Argument 'type' must equal 1, 2, 3 or 4", call.=FALSE)
+  type <- c(1,2,3,4)[m]
   if(anyNA(x) || anyNA(w)) {
     ok <- !(is.na(x) | is.na(w))
     x <- x[ok]
@@ -103,15 +103,38 @@ weighted.quantile <- function(x, w, probs=seq(0,1,0.25), na.rm=TRUE, type=4, col
   nx <- length(x)
   if(nx > 1) {
     result <- switch(as.character(type),
-                     "1" = approx(Fx, x, xout=probs, ties="ordered", rule=2,
-                                  method="constant", f=1)$y,
+                     "1" = {
+                       approx(Fx, x, xout=probs, ties="ordered",
+                                  rule=2, method="constant",
+                              f=1)$y
+                     },
                      "2" = {
                        j <- approx(Fx, 1:nx, xout=probs, ties="ordered",
-                                   rule=2, method="constant", f=0)$y
+                                   rule=2, method="constant",
+                                   f=0)$y
                        j <- as.integer(j)
+                       ## j is position to left (or j=1)
                        g <- probs - Fx[j]
                        jplus1 <- pmin(j+1, nx)
-                       ifelse(g == 0, (x[j]+x[jplus1])/2, x[jplus1])
+                       ifelse(g < 0, x[j],
+                              ifelse(g == 0, (x[j]+x[jplus1])/2, x[jplus1]))
+                     },
+                     "3" = {
+                       j <- approx(Fx, 1:nx, xout=probs, ties="ordered",
+                                   rule=2, method="constant",
+                                   f=0)$y
+                       j <- as.integer(j)
+                       ## j is position to left (or j=1)
+                       jplus1 <- pmin(j+1, nx)
+                       dleft  <- probs - Fx[j]
+                       dright <- Fx[jplus1] - probs
+                       choice <-
+                         ifelse((dleft < dright | dleft < 0),
+                                j,
+                                ifelse(dleft > dright,
+                                       jplus1,
+                                       ifelse(j < nx & j %% 2 == 0, j, jplus1)))
+                       x[choice]
                      },
                      "4" = approx(Fx, x, xout=probs, ties="ordered", rule=2,
                                   method="linear")$y)
