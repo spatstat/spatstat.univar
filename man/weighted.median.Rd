@@ -36,7 +36,8 @@ weighted.var(x, w, na.rm = TRUE)
     Integer specifying the rule for calculating the median or quantile,
     corresponding to the rules available for
     \code{\link[stats]{quantile}}.
-    The currently available choices are \code{type=1}, \code{2} or \code{4}.
+    The currently available choices are \code{type=1}, \code{2},
+    \code{3} or \code{4}.
     See Details.
   }
   \item{collapse}{Logical value specifying whether
@@ -49,35 +50,110 @@ weighted.var(x, w, na.rm = TRUE)
   The \code{i}th observation \code{x[i]} is treated as having
   a weight proportional to \code{w[i]}.
 
-  The weighted median is a value \code{m}
+  The weighted median is a value \code{m} 
   such that the total weight of data less than or equal to \code{m}
   is equal to half the total weight. More generally, the weighted quantile with
   probability \code{p} is a value \code{q} 
   such that the total weight of data less than or equal to \code{q}
   is equal to \code{p} times the total weight.
 
-  If one of the data values does satisfy this requirement, then
+  Define the weighted cumulative distribution function
+  \deqn{
+    F(x) = \sum_{i: x_i \le x} w_i / \sum_{i=1}^n w_i
+  }{
+    F(x) = sum (w_i | x_i <= x) / sum(w_i)
+  }
+  That is, \eqn{F(x)} is the fraction of total weight that is
+  associated with data values \eqn{x_i}{x[i]}
+  less than or equal to the value \eqn{x}.
+
+  The weighted quantile for probability \eqn{p} is a value \eqn{q}
+  defined so that \eqn{F(q) = p} wherever possible.
+  There are different definitions of the quantile depending on
+  how this should be achieved.
+  
+  For unweighted data, 
+  there are 9 different definitions of the sample median and sample
+  quantile, which enjoy slightly different properties. These 9 different
+  definitions are explained in the help for
+  \code{\link[stats]{quantile.default}}. The user's choice of algorithm is
+  selected using the argument \code{type}.
+  
+  For weighted data, 4 of the 9 definitions of sample quantile
+  have been generalised to weighted quantiles.
+  The functions \code{weighted.median} and \code{weighted.quantile}
+  documented here provide these 4 definitions of weighted sample
+  quantile. The user's choice of algorithm is again
+  selected using the argument \code{type}.
+  
+  Suppose the data values have been arranged in increasing order
+  as
+  \eqn{x_{[1]} \le x_{[2]} \le \ldots \le x_{[n]}}{x[1] <= x[2] <= ... x[n]}.
+  If one of the data values \eqn{x_{[k]}}{x[k]} satisfies
+  \eqn{F(x_{[k]})=p}{F(x[k]) = p} exactly, then
   \itemize{
-    \item if \code{type=1} or \code{type=4}, this value is returned;
-    \item if \code{type=2}, 
-    the average of this value and the next largest value is returned.
+    \item if \code{type=1}, \code{type=3} or \code{type=4},
+    the code returns this value, \eqn{x_{[k]}}{x[k]};
+    \item if \code{type=2},
+    the code returns
+    the average of this value and the next largest value,
+    \eqn{(x_{[k]} + x_{[k+1]})/2}.
   }
 
-  If there is no such value, then 
+  If there is no data value satisfying
+  \eqn{F(x_{[k]})=p}{F(x[k]) = p} exactly, then
+  the code finds the two adjacent values
+  \eqn{x_{[k]}}{x[k]} and \eqn{x_{[k+1]}}{x[k+1]} which satisfy
+  \eqn{F(x_{[k]}) < p}{F(x[k]) < p} and
+  \eqn{F(x_{[k+1]}) > p}{F(x[k+1]) > p}, and defines the quantile
+  as follows:
+  
   \itemize{
-    \item if \code{type=1} or \code{type=2}, the next largest value is returned;
-    \item if \code{type=4}, the result is a value obtained by
-    linearly interpolating between the next smallest and next largest values.
+    \item if \code{type=1} or \code{type=2}, the code returns
+    the larger value \eqn{x_{[k+1]}}{x[k+1]};
+    \item if \code{type=3}, the code returns the value
+    which minimises the discrepancy, that is,
+    if we define
+    \eqn{d_k = |F(x_{[k]}) - p|}{d[k] = |F(x[k]) - p|}
+    and 
+    \eqn{d_{k+1} = |F(x_{[k+1]}) - p|}{d[k+1] = |F(x[k+1]) - p|},
+    then 
+    \itemize{
+      \item
+      if \eqn{d_k < d_{k+1}}{d[k] < d[k+1]}, 
+      the code returns \eqn{x_{[k]}}{x[k]};
+      \item
+      if \eqn{d_k > d_{k+1}}{d[k] > d[k+1]}, 
+      the code returns \eqn{x_{[k+1]}}{x[k+1]};
+      \item
+      if \eqn{d_k = d_{k+1}}{d[k] = d[k+1]}, 
+      then the even-numbered value
+      is returned, that is, the code returns \eqn{x_{[k^\ast]}}{x[k*]} where
+      \eqn{k^\ast}{k*} equals \eqn{k} if \eqn{k} is even, and equals
+      \eqn{k+1} if \eqn{k+1} is even.
+    }
+    \item if \code{type=4}, the code returns
+    a value obtained by linearly interpolating between the
+    two adjacent values \eqn{x_{[k]}}{x[k]} and \eqn{x_{[k+1]}}{x[k+1]},
+    that is, it returns the value
+    \eqn{(1-a) x_{[k]} + a x_{[k+1]}}{(1-a) * x[k] + a * x[k+1]}
+    where
+    \eqn{a = (p - F(x_{[k]}))/(F(x_{[k+1]}) - F(x_{[k]}))}{a = (p - F(x[k]))/(F(x[k+1]) - F(x[k])}.
   }
 
   Type 1 is the right-continuous inverse of the weighted
-  cumulative distribution function. 
+  cumulative distribution function.
 
   Type 2 (with \code{collapse=FALSE}) is consistent with the
   traditional definition of the sample median.
 
+  Type 1 always returns a value selected from the input data \code{x},
+  while types 2, 3 and 4 sometimes return values that are interpolated
+  between the input data values.
+
   Note that the default settings are different for \code{weighted.median}
   and \code{weighted.quantile}.
+
 }
 \value{
   \code{weighted.median} returns a numeric value.
@@ -94,7 +170,7 @@ weighted.var(x, w, na.rm = TRUE)
   x <- 1:20
   w <- runif(20)
   weighted.median(x, w)
-  weighted.quantile(x, w)
+  weighted.quantile(x, w, probs=(0:4)/4)
   weighted.var(x, w)
 }
 \keyword{math}

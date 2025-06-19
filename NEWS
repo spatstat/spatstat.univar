@@ -1,4 +1,4 @@
-        CHANGES IN spatstat.univar VERSION 3.1-3.002
+        CHANGES IN spatstat.univar VERSION 3.1-3.003
 
 OVERVIEW
 
@@ -8,7 +8,7 @@ SIGNIFICANT USER-VISIBLE CHANGES
 
     o weighted.median, weighted.quantile
     New option: type = 3.
-    Documentation corrected.
+    Documentation corrected and improved.
     
         CHANGES IN spatstat.univar VERSION 3.1-3
 

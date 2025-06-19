@@ -3,7 +3,7 @@
 #'
 #'   weighted versions of hist, var, median, quantile
 #'
-#'  $Revision: 1.13 $  $Date: 2025/06/18 03:26:56 $
+#'  $Revision: 1.15 $  $Date: 2025/06/19 02:33:26 $
 #'
 
 
@@ -65,29 +65,55 @@ weighted.var <- function(x, w, na.rm=TRUE) {
 #' weighted median
 
 weighted.median <- function(x, w, na.rm=TRUE, type=2, collapse=TRUE) {
-  unname(weighted.quantile(x, probs=0.5, w=w, na.rm=na.rm, type=type, collapse=collapse))
+  unname(weighted.quantile(x, probs=0.5, w=w,
+                           na.rm=na.rm, type=type, collapse=collapse))
 }
 
 #' weighted quantile
 
-weighted.quantile <- function(x, w, probs=seq(0,1,0.25), na.rm=TRUE, type=4, collapse=TRUE) {
+weighted.quantile <- function(x, w, probs=seq(0,1,0.25),
+                              na.rm=TRUE, type=4, collapse=TRUE) {
   x <- as.numeric(as.vector(x))
-  w <- as.numeric(as.vector(w))
-  if(length(x) == 0)
-    stop("No data given")
-  stopifnot(length(x) == length(w))
-  if(is.na(m <- match(type, c(1,2,3,4))))
-    stop("Argument 'type' must equal 1, 2, 3 or 4", call.=FALSE)
-  type <- c(1,2,3,4)[m]
-  if(anyNA(x) || anyNA(w)) {
-    ok <- !(is.na(x) | is.na(w))
-    x <- x[ok]
-    w <- w[ok]
+  if(missing(w)) {
+    w <- rep(1, length(x))
+  } else {
+    w <- as.numeric(as.vector(w))
+    stopifnot(length(x) == length(w))
   }
-  if(length(x) == 0)
-    stop("At least one non-NA value is required")
-  stopifnot(all(w >= 0))
-  if(all(w == 0)) stop("All weights are zero", call.=FALSE)
+  if(length(x) == 0) {
+    warning("No data values given; quantiles returned as NA", call.=FALSE)
+    return(rep(NA_real_, length(probs)))
+  }
+  if(anyNA(x) || anyNA(w)) {
+    if(na.rm) {
+      ok <- !(is.na(x) | is.na(w))
+      x <- x[ok]
+      w <- w[ok]
+      if(length(x) == 0) {
+        warning("All data values are NA; quantiles returned as NA", call.=FALSE)
+        return(rep(NA_real_, length(probs)))
+      } 
+    } else {
+      warning("Data contain NA values; quantiles are NA", call.=FALSE)      
+      return(rep(NA_real_, length(probs)))
+    }
+  }
+  rs <- range(sign(w))
+  if(rs[1L] <= 0) {
+    #' some non-positive weights
+    if(rs[1L] < 0) stop("Some weights are negative", call.=FALSE) 
+    if(rs[2L] == 0) {
+      warning("All weights are zero; quantiles are NA", call.=FALSE)
+      return(rep(NA_real_, length(probs)))
+    }
+  }
+  #' type of quantile
+  knowntypes <- 1:4
+  if(is.na(m <- match(type, knowntypes)))
+    stop(paste("Argument", sQuote("type"),
+               "must equal", commasep(knowntypes, "or")),
+         call.=FALSE)
+  type <- knowntypes[m]
   #'
   oo <- order(x)
   x <- x[oo]
@@ -95,49 +121,59 @@ weighted.quantile <- function(x, w, probs=seq(0,1,0.25), na.rm=TRUE, type=4, col
   Fx <- cumsum(w)/sum(w)
   #' 
   if(collapse && anyDuplicated(x)) {
-    dup <- rev(duplicated(rev(x)))
-    x <- x[!dup]
-    Fx <- Fx[!dup]
+    last <- rev(!duplicated(rev(x)))
+    x <- x[last]
+    Fx <- Fx[last]
   }
   #'
   nx <- length(x)
   if(nx > 1) {
-    result <- switch(as.character(type),
-                     "1" = {
-                       approx(Fx, x, xout=probs, ties="ordered",
-                                  rule=2, method="constant",
-                              f=1)$y
-                     },
-                     "2" = {
-                       j <- approx(Fx, 1:nx, xout=probs, ties="ordered",
-                                   rule=2, method="constant",
-                                   f=0)$y
-                       j <- as.integer(j)
-                       ## j is position to left (or j=1)
-                       g <- probs - Fx[j]
-                       jplus1 <- pmin(j+1, nx)
-                       ifelse(g < 0, x[j],
-                              ifelse(g == 0, (x[j]+x[jplus1])/2, x[jplus1]))
-                     },
-                     "3" = {
-                       j <- approx(Fx, 1:nx, xout=probs, ties="ordered",
-                                   rule=2, method="constant",
-                                   f=0)$y
-                       j <- as.integer(j)
-                       ## j is position to left (or j=1)
-                       jplus1 <- pmin(j+1, nx)
-                       dleft  <- probs - Fx[j]
-                       dright <- Fx[jplus1] - probs
-                       choice <-
-                         ifelse((dleft < dright | dleft < 0),
-                                j,
-                                ifelse(dleft > dright,
-                                       jplus1,
-                                       ifelse(j < nx & j %% 2 == 0, j, jplus1)))
-                       x[choice]
-                     },
-                     "4" = approx(Fx, x, xout=probs, ties="ordered", rule=2,
-                                  method="linear")$y)
+    result <- switch(type,
+    {
+      #' 1
+      approx(Fx, x, xout=probs, ties="ordered",
+             rule=2, method="constant",
+             f=1)$y
+    },
+    {
+      #' 2
+      j <- approx(Fx, 1:nx, xout=probs, ties="ordered",
+                  rule=2, method="constant",
+                  f=0)$y
+      j <- as.integer(j)
+      ## j is position immediately to left (or j=1)
+      g <- probs - Fx[j]
+      jplus1 <- pmin(j+1, nx)
+      ifelse(g < 0, x[j],
+                    ifelse(g == 0,
+                          (x[j]+x[jplus1])/2,
+                          x[jplus1]))
+    },
+    {
+      #' 3
+      j <- approx(Fx, 1:nx, xout=probs, ties="ordered",
+                  rule=2, method="constant",
+                  f=0)$y
+      j <- as.integer(j)
+      ## j is position immediately to left (or j=1)
+      jplus1 <- pmin(j+1, nx)
+      dleft  <- probs - Fx[j]
+      dright <- Fx[jplus1] - probs
+      choice <-
+        ifelse((dleft < dright | dleft < 0),
+               j,
+               ifelse(dleft > dright,
+                      jplus1,
+                      ifelse(j < nx & j %% 2 == 0,
+                             j,
+                             jplus1)))
+      x[choice]
+    },
+    {
+      #' 4
+      approx(Fx, x, xout=probs, ties="ordered", rule=2,
+             method="linear")$y
+    })
   } else {
     result <- rep.int(x, length(probs))
   }
