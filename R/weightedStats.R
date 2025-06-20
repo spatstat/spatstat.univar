@@ -3,11 +3,15 @@
 #'
 #'   weighted versions of hist, var, median, quantile
 #'
-#'  $Revision: 1.15 $  $Date: 2025/06/19 02:33:26 $
+#'   whist
+#'   weighted.var
+#'   weighted.median
+#'   weighted.quantile
+#' 
+#'  $Revision: 1.19 $  $Date: 2025/06/20 05:12:04 $
 #'
-
-
-#'
+#' --------------------------------------------------------
+#' 
 #'    whist      weighted histogram
 #'
 
@@ -52,6 +56,8 @@ whist <- function(x, breaks, weights=NULL, method=c("C", "interpreted")) {
 #' where v = w/sum(w). See help(cov.wt)
 
 weighted.var <- function(x, w, na.rm=TRUE) {
+  if(missing(w) || is.null(w))
+    w <- rep(1, length(x))
   bad <- is.na(w) | is.na(x)
   if(any(bad)) {
     if(!na.rm) return(NA_real_)
@@ -65,6 +71,8 @@ weighted.var <- function(x, w, na.rm=TRUE) {
 #' weighted median
 
 weighted.median <- function(x, w, na.rm=TRUE, type=2, collapse=TRUE) {
+  if(missing(w) || is.null(w))
+    w <- rep(1, length(x))
   unname(weighted.quantile(x, probs=0.5, w=w,
                            na.rm=na.rm, type=type, collapse=collapse))
 }
@@ -74,7 +82,7 @@ weighted.median <- function(x, w, na.rm=TRUE, type=2, collapse=TRUE) {
 weighted.quantile <- function(x, w, probs=seq(0,1,0.25),
                               na.rm=TRUE, type=4, collapse=TRUE) {
   x <- as.numeric(as.vector(x))
-  if(missing(w)) {
+  if(missing(w) || is.null(w)) {
     w <- rep(1, length(x))
   } else {
     w <- as.numeric(as.vector(w))
@@ -108,12 +116,12 @@ weighted.quantile <- function(x, w, probs=seq(0,1,0.25),
     }
   }
   #' type of quantile
-  knowntypes <- 1:4
-  if(is.na(m <- match(type, knowntypes)))
+  supportedtypes <- 1:4
+  if(is.na(m <- match(as.integer(type), supportedtypes)))
     stop(paste("Argument", sQuote("type"),
-               "must equal", commasep(knowntypes, "or")),
+               "must equal", commasep(supportedtypes, "or")),
          call.=FALSE)
-  type <- knowntypes[m]
+  type <- supportedtypes[m]
   #'
   oo <- order(x)
   x <- x[oo]

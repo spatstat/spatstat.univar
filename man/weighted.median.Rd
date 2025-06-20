@@ -24,6 +24,8 @@ weighted.var(x, w, na.rm = TRUE)
   \item{w}{
     Weights.
     A vector of nonnegative numbers, of the same length as \code{x}.
+    If \code{w} is missing or \code{NULL}, the default weights
+    are all equal to 1.
   }
   \item{probs}{
     Probabilities for which the quantiles should be computed.
@@ -141,8 +143,13 @@ weighted.var(x, w, na.rm = TRUE)
     \eqn{a = (p - F(x_{[k]}))/(F(x_{[k+1]}) - F(x_{[k]}))}{a = (p - F(x[k]))/(F(x[k+1]) - F(x[k])}.
   }
 
-  Type 1 is the right-continuous inverse of the weighted
-  cumulative distribution function.
+  For very small probabilities \eqn{p < F(x_{[1]})}{p < F(x[1])} the value
+  \eqn{x_{[1]}}{x[1]} is returned.
+  For very large probabilities \eqn{p > F(x_{[n]})}{p > F(x[n])} the value
+  \eqn{x_{[n]}}{x[n]} is returned.  
+
+  Type 1 is the left-continuous inverse of the weighted
+  cumulative distribution function \eqn{F(x)}.
 
   Type 2 (with \code{collapse=FALSE}) is consistent with the
   traditional definition of the sample median.
@@ -153,7 +160,6 @@ weighted.var(x, w, na.rm = TRUE)
 
   Note that the default settings are different for \code{weighted.median}
   and \code{weighted.quantile}.
-
 }
 \value{
   \code{weighted.median} returns a numeric value.
