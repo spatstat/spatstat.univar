@@ -189,7 +189,7 @@ weighted.quantile <- function(x, w, probs=seq(0,1,0.25),
     },
     {
       #' 5
-      FxLag <- Fx - diff(c(0, Fx))
+      FxLag <- Fx - diff(c(0, Fx))/2
       approx(FxLag, x, xout=probs, ties="ordered", rule=2,
              method="linear")$y
     })
