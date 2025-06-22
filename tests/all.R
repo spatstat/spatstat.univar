@@ -13,7 +13,7 @@ cat(paste("--------- Executing",
           if(FULLTEST) "** ALL **" else "**RESTRICTED** subset of",
           "test code -----------\n"))
 # tests/weightedstats.R
-# $Revision: 1.2 $ $Date: 2023/11/05 01:40:53 $
+# $Revision: 1.3 $ $Date: 2025/06/22 03:46:42 $
 
 local({
   if(ALWAYS) { # depends on hardware
@@ -33,8 +33,24 @@ local({
     x <- rnorm(20) 
     d0 <- unnormdensity(x, weights=rep(0, 20))
     dneg <- unnormdensity(x, weights=c(-runif(19), 0))
+    ## cases of weighted.quantile
+    w <- rexp(20)
+    f <- function(type=1, collapse=FALSE, X=x, W=w) {
+      a <- weighted.quantile(X, W, probs=(0:4)/4, type=type, collapse=collapse)
+      invisible(NULL)
+    }
+    f(1, FALSE)
+    f(2, FALSE)
+    f(3, FALSE)
+    f(4, FALSE)
+    f(5, FALSE)
+    f(1, TRUE)
+    f(2, TRUE)
+    f(3, TRUE)
+    f(4, TRUE)
+    f(5, TRUE)
   }
-
+  
 })
 
 #'

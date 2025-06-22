@@ -10,9 +10,9 @@
   weights associated with them.
 }
 \usage{
-weighted.median(x, w, na.rm = TRUE, type=2, collapse=TRUE)
+weighted.median(x, w, na.rm = TRUE, type=2, collapse=FALSE)
 
-weighted.quantile(x, w, probs=seq(0,1,0.25), na.rm = TRUE, type=4, collapse=TRUE)
+weighted.quantile(x, w, probs=seq(0,1,0.25), na.rm = TRUE, type=4, collapse=FALSE)
 
 weighted.var(x, w, na.rm = TRUE)
 }
@@ -39,7 +39,7 @@ weighted.var(x, w, na.rm = TRUE)
     corresponding to the rules available for
     \code{\link[stats]{quantile}}.
     The currently available choices are \code{type=1}, \code{2},
-    \code{3} or \code{4}.
+    \code{3}, \code{4} and \code{5}.
     See Details.
   }
   \item{collapse}{Logical value specifying whether
@@ -81,10 +81,10 @@ weighted.var(x, w, na.rm = TRUE)
   \code{\link[stats]{quantile.default}}. The user's choice of algorithm is
   selected using the argument \code{type}.
   
-  For weighted data, 4 of the 9 definitions of sample quantile
+  For weighted data, the first 5 of the 9 definitions of sample quantile
   have been generalised to weighted quantiles.
   The functions \code{weighted.median} and \code{weighted.quantile}
-  documented here provide these 4 definitions of weighted sample
+  documented here provide these 5 definitions of weighted sample
   quantile. The user's choice of algorithm is again
   selected using the argument \code{type}.
   
@@ -140,7 +140,15 @@ weighted.var(x, w, na.rm = TRUE)
     that is, it returns the value
     \eqn{(1-a) x_{[k]} + a x_{[k+1]}}{(1-a) * x[k] + a * x[k+1]}
     where
-    \eqn{a = (p - F(x_{[k]}))/(F(x_{[k+1]}) - F(x_{[k]}))}{a = (p - F(x[k]))/(F(x[k+1]) - F(x[k])}.
+    \eqn{a = (p - F(x_{[k]}))/(F(x_{[k+1]}) - F(x_{[k]}))}{a = (p -
+      F(x[k]))/(F(x[k+1]) - F(x[k])}.
+    \item if \code{type=5}, the code returns
+    a value obtained by linearly interpolating between the
+    two points \eqn{(p_k, x_{[k]})}{(p[k], x[k])} and
+    \eqn{(p_{k+1}, x_{[k+1]})}{(p[k+1], x[k+1])}
+    where \eqn{p_k = (F(x_{[k]}) + F(x_{[k-1]}))/2}{p[k] = (F(x[k]) + F(x[k-1]))/2}
+    for \eqn{k>1},
+    and \eqn{p_1=F(x_{[1]})/2}{p[1] = F(x[1])/2}.
   }
 
   For very small probabilities \eqn{p < F(x_{[1]})}{p < F(x[1])} the value
@@ -148,10 +156,9 @@ weighted.var(x, w, na.rm = TRUE)
   For very large probabilities \eqn{p > F(x_{[n]})}{p > F(x[n])} the value
   \eqn{x_{[n]}}{x[n]} is returned.  
 
-  Type 1 is the left-continuous inverse of the weighted
-  cumulative distribution function \eqn{F(x)}.
+  Type 1 is the left-continuous quantile function.
 
-  Type 2 (with \code{collapse=FALSE}) is consistent with the
+  Type 2 is consistent with the
   traditional definition of the sample median.
 
   Type 1 always returns a value selected from the input data \code{x},
@@ -160,6 +167,8 @@ weighted.var(x, w, na.rm = TRUE)
 
   Note that the default settings are different for \code{weighted.median}
   and \code{weighted.quantile}.
+
+  The implementations of type 3 and 5 are experimental and may be changed.
 }
 \value{
   \code{weighted.median} returns a numeric value.

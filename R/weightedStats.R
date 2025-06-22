@@ -8,7 +8,7 @@
 #'   weighted.median
 #'   weighted.quantile
 #' 
-#'  $Revision: 1.19 $  $Date: 2025/06/20 05:12:04 $
+#'  $Revision: 1.21 $  $Date: 2025/06/22 03:20:02 $
 #'
 #' --------------------------------------------------------
 #' 
@@ -70,7 +70,7 @@ weighted.var <- function(x, w, na.rm=TRUE) {
 
 #' weighted median
 
-weighted.median <- function(x, w, na.rm=TRUE, type=2, collapse=TRUE) {
+weighted.median <- function(x, w, na.rm=TRUE, type=2, collapse=FALSE) {
   if(missing(w) || is.null(w))
     w <- rep(1, length(x))
   unname(weighted.quantile(x, probs=0.5, w=w,
@@ -80,7 +80,7 @@ weighted.median <- function(x, w, na.rm=TRUE, type=2, collapse=TRUE) {
 #' weighted quantile
 
 weighted.quantile <- function(x, w, probs=seq(0,1,0.25),
-                              na.rm=TRUE, type=4, collapse=TRUE) {
+                              na.rm=TRUE, type=4, collapse=FALSE) {
   x <- as.numeric(as.vector(x))
   if(missing(w) || is.null(w)) {
     w <- rep(1, length(x))
@@ -116,12 +116,17 @@ weighted.quantile <- function(x, w, probs=seq(0,1,0.25),
     }
   }
   #' type of quantile
-  supportedtypes <- 1:4
-  if(is.na(m <- match(as.integer(type), supportedtypes)))
+  type <- as.integer(type)
+  supportedtypes <- 1:5
+  experimental <- c(3, 5)
+  if(is.na(m <- match(type, supportedtypes)))
     stop(paste("Argument", sQuote("type"),
                "must equal", commasep(supportedtypes, "or")),
          call.=FALSE)
   type <- supportedtypes[m]
+  if(!is.na(match(type, experimental)))
+    message(paste("Warning: implementation of weighted quantile type", type,
+                  "is experimental and may be changed"))
   #'
   oo <- order(x)
   x <- x[oo]
@@ -180,6 +185,12 @@ weighted.quantile <- function(x, w, probs=seq(0,1,0.25),
     {
       #' 4
       approx(Fx, x, xout=probs, ties="ordered", rule=2,
+             method="linear")$y
+    },
+    {
+      #' 5
+      FxLag <- Fx - diff(c(0, Fx))
+      approx(FxLag, x, xout=probs, ties="ordered", rule=2,
              method="linear")$y
     })
   } else {
