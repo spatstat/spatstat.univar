@@ -8,7 +8,7 @@
 #'   weighted.median
 #'   weighted.quantile
 #' 
-#'  $Revision: 1.21 $  $Date: 2025/06/22 03:20:02 $
+#'  $Revision: 1.23 $  $Date: 2025/06/28 07:47:32 $
 #'
 #' --------------------------------------------------------
 #' 
@@ -118,15 +118,17 @@ weighted.quantile <- function(x, w, probs=seq(0,1,0.25),
   #' type of quantile
   type <- as.integer(type)
   supportedtypes <- 1:5
-  experimental <- c(3, 5)
   if(is.na(m <- match(type, supportedtypes)))
     stop(paste("Argument", sQuote("type"),
                "must equal", commasep(supportedtypes, "or")),
          call.=FALSE)
   type <- supportedtypes[m]
+  #' warn about experimental code
+  experimental <- c(3, 5)
   if(!is.na(match(type, experimental)))
-    message(paste("Warning: implementation of weighted quantile type", type,
-                  "is experimental and may be changed"))
+    warning(paste("Implementation of weighted quantile type", type,
+                  "is experimental and may be changed"),
+            call.=FALSE)
   #'
   oo <- order(x)
   x <- x[oo]
@@ -164,22 +166,15 @@ weighted.quantile <- function(x, w, probs=seq(0,1,0.25),
     },
     {
       #' 3
-      j <- approx(Fx, 1:nx, xout=probs, ties="ordered",
+      FxLag <- Fx - diff(c(0, Fx))/2
+      j <- approx(FxLag, 1:nx, xout=probs, ties="ordered",
                   rule=2, method="constant",
                   f=0)$y
       j <- as.integer(j)
-      ## j is position immediately to left (or j=1)
       jplus1 <- pmin(j+1, nx)
-      dleft  <- probs - Fx[j]
-      dright <- Fx[jplus1] - probs
-      choice <-
-        ifelse((dleft < dright | dleft < 0),
-               j,
-               ifelse(dleft > dright,
-                      jplus1,
-                      ifelse(j < nx & j %% 2 == 0,
-                             j,
-                             jplus1)))
+      ##
+      giszero <- !is.na(match(probs, FxLag))
+      choice <- ifelse(giszero & (j %% 2 == 0), j, jplus1)
       x[choice]
     },
     {
