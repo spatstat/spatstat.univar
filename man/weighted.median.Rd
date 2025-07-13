@@ -39,7 +39,7 @@ weighted.var(x, w, na.rm = TRUE)
     corresponding to the rules available for
     \code{\link[stats]{quantile}}.
     The currently available choices are \code{type=1}, \code{2},
-    \code{3}, \code{4} and \code{5}.
+    \code{3} and \code{4}.
     See Details.
   }
   \item{collapse}{Logical value specifying whether
@@ -52,14 +52,15 @@ weighted.var(x, w, na.rm = TRUE)
   The \code{i}th observation \code{x[i]} is treated as having
   a weight proportional to \code{w[i]}.
 
-  The weighted median is a value \code{m} 
+  The weighted sample median is a value \code{m} 
   such that the total weight of data less than or equal to \code{m}
-  is equal to half the total weight. More generally, the weighted quantile with
+  is equal to half the total weight. More generally,
+  the weighted sample quantile with
   probability \code{p} is a value \code{q} 
   such that the total weight of data less than or equal to \code{q}
   is equal to \code{p} times the total weight.
 
-  Define the weighted cumulative distribution function
+  Define the weighted empirical cumulative distribution function
   \deqn{
     F(x) = \sum_{i: x_i \le x} w_i / \sum_{i=1}^n w_i
   }{
@@ -69,7 +70,7 @@ weighted.var(x, w, na.rm = TRUE)
   associated with data values \eqn{x_i}{x[i]}
   less than or equal to the value \eqn{x}.
 
-  The weighted quantile for probability \eqn{p} is a value \eqn{q}
+  The weighted quantile for probability \eqn{p} is a number \eqn{q}
   defined so that \eqn{F(q) = p} wherever possible.
   There are different definitions of the quantile depending on
   how this should be achieved.
@@ -81,10 +82,12 @@ weighted.var(x, w, na.rm = TRUE)
   \code{\link[stats]{quantile.default}}. The user's choice of algorithm is
   selected using the argument \code{type}.
   
-  For weighted data, the first 5 of the 9 definitions of sample quantile
+  For weighted data, the first
+4
+  of the 9 definitions of sample quantile
   have been generalised to weighted quantiles.
   The functions \code{weighted.median} and \code{weighted.quantile}
-  documented here provide these 5 definitions of weighted sample
+  documented here provide these definitions of weighted sample
   quantile. The user's choice of algorithm is again
   selected using the argument \code{type}.
   
@@ -142,13 +145,6 @@ weighted.var(x, w, na.rm = TRUE)
     where
     \eqn{a = (p - F(x_{[k]}))/(F(x_{[k+1]}) - F(x_{[k]}))}{a = (p -
       F(x[k]))/(F(x[k+1]) - F(x[k])}.
-    \item if \code{type=5}, the code returns
-    a value obtained by linearly interpolating between the
-    two points \eqn{(p_k, x_{[k]})}{(p[k], x[k])} and
-    \eqn{(p_{k+1}, x_{[k+1]})}{(p[k+1], x[k+1])}
-    where \eqn{p_k = (F(x_{[k]}) + F(x_{[k-1]}))/2}{p[k] = (F(x[k]) + F(x[k-1]))/2}
-    for \eqn{k>1},
-    and \eqn{p_1=F(x_{[1]})/2}{p[1] = F(x[1])/2}.
   }
 
   For very small probabilities \eqn{p < F(x_{[1]})}{p < F(x[1])} the value
@@ -161,14 +157,16 @@ weighted.var(x, w, na.rm = TRUE)
   Type 2 is consistent with the
   traditional definition of the sample median.
 
-  Type 1 always returns a value selected from the input data \code{x},
-  while types 2, 3 and 4 sometimes return values that are interpolated
+  Types 1 and 3 always return a value selected from the input data \code{x},
+  while types 2 and 4 sometimes return values that are interpolated
   between the input data values.
 
   Note that the default settings are different for \code{weighted.median}
   and \code{weighted.quantile}.
 
-  The implementations of type 3 and 5 are experimental and may be changed.
+%  The implementations of type 3 and 5 are
+  The implementation of type 3 is
+  experimental and may be changed.
 }
 \value{
   \code{weighted.median} returns a numeric value.

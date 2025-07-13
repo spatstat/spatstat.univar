@@ -8,7 +8,7 @@
 #'   weighted.median
 #'   weighted.quantile
 #' 
-#'  $Revision: 1.23 $  $Date: 2025/06/28 07:47:32 $
+#'  $Revision: 1.24 $  $Date: 2025/07/13 01:09:56 $
 #'
 #' --------------------------------------------------------
 #' 
@@ -118,9 +118,10 @@ weighted.quantile <- function(x, w, probs=seq(0,1,0.25),
   #' type of quantile
   type <- as.integer(type)
   supportedtypes <- 1:5
+  documentedtypes <- 1:4
   if(is.na(m <- match(type, supportedtypes)))
     stop(paste("Argument", sQuote("type"),
-               "must equal", commasep(supportedtypes, "or")),
+               "must equal", commasep(documentedtypes, "or")),
          call.=FALSE)
   type <- supportedtypes[m]
   #' warn about experimental code
