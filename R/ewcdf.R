@@ -67,9 +67,9 @@ ewcdf <- function(x, weights=NULL, normalise=TRUE, adjust=1)
   rval <- approxfun(vals, cumwt,
                     method = "constant", yleft = 0, yright = totwt,
                     f = 0, ties = "ordered")
-  class(rval) <- c("ewcdf",
-                   if(normalise) "ecdf" else NULL,
-                   "stepfun", class(rval))
+  class(rval) <- unique(c("ewcdf",
+                          if(normalise) "ecdf" else NULL,
+                          "stepfun", class(rval)))
   assign("w", w, envir=environment(rval))
   attr(rval, "call") <- sys.call()
   return(rval)
