@@ -80,6 +80,9 @@ unnormdensity(x, ..., weights = NULL, defaults)
 \value{
   Object of class \code{"density"} as described in
   \code{\link[stats]{density.default}}.
+
+  The result contains an additional component \code{$kernel} giving the name
+  of the smoothing kernel that was used.
 }
 \author{
   \adrian
