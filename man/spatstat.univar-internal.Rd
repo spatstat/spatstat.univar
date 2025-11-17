@@ -7,7 +7,6 @@
 \alias{check.bandwidth}
 \alias{kermom}
 \alias{km.rs.opt}
-\alias{knots.ecdf}
 \alias{make.even.breaks}
 \alias{match.kernel}
 \alias{plot.adaptivedensity}
@@ -30,7 +29,6 @@ check.hist.lengths(hist, breaks)
 check.bandwidth(bw, descrip, fatal)
 kermom(m, r, kernel, mean, sd)
 km.rs.opt(o, cc, d, breaks, KM, RS)
-\method{knots}{ecdf}(Fn, \dots)
 make.even.breaks(bmax, npos, bstep)
 match.kernel(kernel)
 \method{plot}{adaptivedensity}(x, \dots, xlab)
