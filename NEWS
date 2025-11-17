@@ -1,8 +1,10 @@
-        CHANGES IN spatstat.univar VERSION 3.1-4.005
+        CHANGES IN spatstat.univar VERSION 3.1-5
 
 OVERVIEW
 
     o `unnormdensity' returns the smoothing parameters used.
+
+    o Minor improvements.
 
 SIGNIFICANT USER-VISIBLE CHANGES
 
