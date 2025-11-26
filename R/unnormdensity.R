@@ -1,7 +1,7 @@
 #
 #  unnormdensity.R
 #
-#  $Revision: 1.22 $  $Date: 2025/11/14 05:01:47 $
+#  $Revision: 1.23 $  $Date: 2025/11/26 01:13:25 $
 #
 
 unnormdensity <- local({
@@ -18,17 +18,24 @@ unnormdensity <- local({
       out <- do.call(fewdatacase,
                      resolve.defaults(
                        list(x=x, ..., weights=weights),
-                       defaults))
+                       defaults,
+                       .MatchNull=FALSE))
     } else if(is.null(weights)) {
       ## all weights are 1 (not 1/n)
       out <- do.call.matched(density.default,
-                             c(list(x=quote(x), ...), defaults),
+                             resolve.defaults(
+                               list(x=quote(x), ...),
+                               defaults,
+                               .MatchNull=FALSE),
                              envir=envir.here)
       out$y <- length(x) * out$y
     } else if(length(weights) == 1) {
       ## all weights are equal
       out <- do.call.matched(density.default,
-                             c(list(x=quote(x), ...), defaults),
+                             resolve.defaults(
+                               list(x=quote(x), ...),
+                               defaults,
+                               .MatchNull=FALSE),
                              envir=envir.here)
       out$y <- weights[1] * length(x) * out$y
     } else if(length(weights) != length(x)) {
@@ -38,27 +45,34 @@ unnormdensity <- local({
       if(all(weightrange == 0)) {
         ## result is zero
         out <- do.call.matched(density.default,
-                               c(list(x=quote(x), ...), defaults),
+                               resolve.defaults(
+                                 list(x=quote(x), ...),
+                                 defaults,
+                                 .MatchNull=FALSE),
                                envir=envir.here)
         out$y <- 0 * out$y
       } else if(all(weightrange >= 0)) {
         ## all masses are nonnegative, some are positive
         out <- do.call.matched(density.default,
-                               c(list(x=quote(x),
+                               resolve.defaults(
+                                 list(x=quote(x),
                                       weights=quote(weights),
                                       subdensity=TRUE,
                                       ...),
-                                 defaults),
+                                 defaults,
+                                 .MatchNull=FALSE),
                                envir=envir.here)
       } else if(all(weightrange <= 0)) {
         ## all masses are nonpositive, some are negative
         w <- (- weights)
         out <- do.call.matched(density.default,
-                               c(list(x=quote(x),
+                               resolve.defaults(
+                                 list(x=quote(x),
                                       weights=quote(w),
                                       subdensity=TRUE,
                                       ...),
-                                 defaults),
+                                 defaults,
+                                 .MatchNull=FALSE),
                                envir=envir.here)
         out$y <- (- out$y)
       } else {
@@ -77,11 +91,13 @@ unnormdensity <- local({
         } else {
           ## compute bandwidth by applying a rule, using absolute masses
           dabs <- do.call.matched(density.default,
-                                  c(list(x=quote(x),
+                                  resolve.defaults(
+                                    list(x=quote(x),
                                          weights=quote(wabs),
                                          subdensity=TRUE,
                                          ...),
-                                    defaults),
+                                    defaults,
+                                    .MatchNull=FALSE),
                                   envir=envir.here)
           bw <- dabs$bw
         }

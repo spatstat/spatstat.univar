@@ -1,3 +1,16 @@
+        CHANGES IN spatstat.univar VERSION 3.1-5.001
+
+OVERVIEW
+
+    o `unnormdensity' handles 'bw=NULL'.
+
+    o Minor improvements.
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o unnormdensity
+    Argument 'bw' may be NULL (and this is equivalent to 'bw' being missing)
+    
         CHANGES IN spatstat.univar VERSION 3.1-5
 
 OVERVIEW

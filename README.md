@@ -4,8 +4,16 @@
 [![GitHub R package version](https://img.shields.io/github/r-package/v/spatstat/spatstat.univar)](https://github.com/spatstat/spatstat.univar)
 
 This is the newest member of the `spatstat` package family.
-It contains code for estimation of univariate probability distributions,
-including:
+It contains code for estimation of **univariate probability distributions**.
+
+You are viewing the GitHub repository which holds
+the latest **development version** of `spatstat.univar`.
+For the latest public release on CRAN, click the green badge above.
+
+### Overview 
+
+`spatstat.univar` contains code for
+estimation of univariate probability distributions, including:
 
 - *weighted distributions and weighted statistics*
 including weighted empirical cumulative distributions, weighted median,
@@ -33,3 +41,22 @@ and indefinite integrals.
 
 Some of the code has been extracted from `spatstat.geom`,
 `spatstat.random` and `spatstat.explore`, while some is new.
+
+### Installing the package
+
+This repository contains the _development version_ of
+`spatstat.univar`. The easiest way to install the development version
+is to start R and type
+
+```R
+repo <- c('https://spatstat.r-universe.dev', 'https://cloud.r-project.org')
+install.packages("spatstat.univar", dependencies=TRUE, repos=repo)
+```
+
+To install the latest _public release_ of `spatstat.univar`,
+type
+
+```R
+install.packages("spatstat.univar")
+```
+
