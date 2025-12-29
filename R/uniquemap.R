@@ -4,7 +4,7 @@
 #'   Copyright (C) Adrian Baddeley, Ege Rubak and Rolf Turner 2001-2019
 #'   Licence: GNU Public Licence >= 2
 #'
-#'   $Revision: 1.20 $  $Date: 2024/06/26 08:50:53 $
+#'   $Revision: 1.21 $  $Date: 2025/12/29 06:07:10 $
 
 uniquemap <- function(x) { UseMethod("uniquemap") }
 
@@ -14,7 +14,8 @@ uniquemap.default <- function(x) {
   if(is.atomic(x) && (is.factor(x) || (is.vector(x) && is.numeric(x)))) {
     if(is.factor(x)) x <- as.integer(x)
     o <- order(x, seqn)
-    isfirst <- c(TRUE, (diff(x[o]) != 0))
+    xo <- x[o]
+    isfirst <- c(TRUE, as.logical(difflong(xo)))
     omap <- cumsum(isfirst)
     result <- seqn
     result[o] <- o[isfirst][omap]
@@ -39,13 +40,13 @@ uniquemap.matrix <- function(x) {
     if(nc == 2L) {
       oo <- order(x[,1], x[,2], seqn)
       xx <- x[oo, , drop=FALSE]
-      isfirst <- c(TRUE, (diff(xx[,1]) != 0) | (diff(xx[,2]) != 0))
+      isfirst <- c(TRUE, (difflong(xx[,1]) != 0) | (difflong(xx[,2]) != 0))
     } else {
       ## y <- asplit(x, 2) would require R 3.6.0
       y <- split(as.vector(x), factor(as.vector(col(x)), levels=1:nc))
       oo <- do.call(order, append(unname(y), list(seqn)))
       xx <- x[oo, , drop=FALSE]
-      isfirst <- c(TRUE, matrowany(apply(xx, 2, diff) != 0))
+      isfirst <- c(TRUE, matrowany(apply(xx, 2, difflong) != 0))
     }
     uniqueids <- seqn[oo][isfirst]
     lastunique <- cumsum(isfirst)
@@ -80,11 +81,11 @@ uniquemap.data.frame <- function(x) {
     if(nc == 2L) {
       oo <- order(x[,1], x[,2], seqn)
       xx <- x[oo, , drop=FALSE]
-      isfirst <- c(TRUE, (diff(xx[,1]) != 0) | (diff(xx[,2]) != 0))
+      isfirst <- c(TRUE, (difflong(xx[,1]) != 0) | (difflong(xx[,2]) != 0))
     } else {
       oo <- do.call(order, append(unname(as.list(x)), list(seqn)))
       xx <- x[oo, , drop=FALSE]
-      isfirst <- c(TRUE, matrowany(apply(xx, 2, diff) != 0))
+      isfirst <- c(TRUE, matrowany(apply(xx, 2, difflong) != 0))
     }
     uniqueids <- seqn[oo][isfirst]
     lastunique <- cumsum(isfirst)
