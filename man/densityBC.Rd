@@ -250,7 +250,7 @@
   (variable-bandwidth) estimation.
 }
 \references{
-  \ournewpaper
+  \smoothpcfpaper
 
   Boneva, L.I., Kendall, D.G. and Stefanov, I. (1971)
   Spline transformations: three new diagnostic aids for the

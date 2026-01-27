@@ -23,7 +23,7 @@
    as it avoids repeated function calls and it makes some efficiencies. 
    However, it requires pre-scaling of the data.
 
-   Copyright (c) 2008-2024 Adrian Baddeley, Tilman Davies and Martin Hazelton
+   Copyright (c) 2008-2026 Adrian Baddeley, Tilman Davies and Martin Hazelton
    GNU Public Licence (>= 2.0)
 
 */
@@ -63,8 +63,8 @@ void colonel(
   Nr = *nr;
 
   *errcode = OK;
-  if(Nx < 0 || Nr <= 0) {
-    *errcode = ERR_NEGATIVE_LENGTH;
+  if(Nx < 0 || Nr < 2) {
+    *errcode = ERR_LENGTH;
     return;
   }
 
@@ -192,7 +192,7 @@ void colonel(
     return;
   } else {
     /* unrecognised kernel */
-    *errcode = ERR_UNKNOWN_KERNEL;
+    *errcode = ERR_KERNEL;
     return;
   }
 }
@@ -221,13 +221,13 @@ void fcolonel(
   Nr = *nr;
 
   *errcode = OK;
-  if(Nx < 0 || Nr <= 0) {
-    *errcode = ERR_NEGATIVE_LENGTH;
+  if(Nx < 0 || Nr < 2) {
+    *errcode = ERR_LENGTH;
     return;
   }
 
   /* spacing between 'r' values */
-  dr = r[Nr-1]/((double) Nr);
+  dr = (r[Nr-1] - r[0])/((double) Nr - 1.0);
   
   /* initialise f(r) */
   for(j = 0; j < Nr; j++) 
@@ -242,8 +242,8 @@ void fcolonel(
     for(i = 0; i < Nx; i++) {
       xi = x[i];
       wi = w[i];
-      k = floor((xi - GAUSSTHRESH)/dr); /* r[k] is 8 std. dev. below x[i] */
-      if(k < 0) k = 0;
+      k = floor((xi - GAUSSTHRESH)/dr); 
+      if(k < 0) k = 0; /* r[k] is 8 std. dev. below x[i] */
       if(k < Nr) {
 	for(j = k; j < Nr; j++) {
 	  vij = r[j] - xi;
@@ -262,8 +262,8 @@ void fcolonel(
     for(i = 0; i < Nx; i++) {
       xi = x[i];
       wi = w[i];
-      k = floor((xi - (double) 1.0)/dr); /* r[k] is 1 halfwidth below x[i] */
-      if(k < 0) k = 0;
+      k = floor((xi - (double) 1.0)/dr); 
+      if(k < 0) k = 0; /* r[k] is 1 halfwidth below x[i] */
       if(k < Nr) {
 	for(j = k; j < Nr; j++) {
 	  vij = r[j] - xi;
@@ -282,8 +282,8 @@ void fcolonel(
     for(i = 0; i < Nx; i++) {
       xi = x[i];
       wi = w[i];
-      k = floor((xi - (double) 1.0)/dr); /* r[k] is 1 halfwidth below x[i] */
-      if(k < 0) k = 0;
+      k = floor((xi - (double) 1.0)/dr); 
+      if(k < 0) k = 0; /* r[k] is 1 halfwidth below x[i] */
       if(k < Nr) {
 	for(j = k; j < Nr; j++) {
 	  vij = r[j] - xi;
@@ -301,8 +301,8 @@ void fcolonel(
     for(i = 0; i < Nx; i++) {
       xi = x[i];
       wi = w[i];
-      k = floor((xi - (double) 1.0)/dr); /* r[k] is 1 halfwidth below x[i] */
-      if(k < 0) k = 0;
+      k = floor((xi - (double) 1.0)/dr); 
+      if(k < 0) k = 0; /* r[k] is 1 halfwidth below x[i] */
       if(k < Nr) {
 	for(j = k; j < Nr; j++) {
 	  vij = r[j] - xi;
@@ -322,8 +322,8 @@ void fcolonel(
     for(i = 0; i < Nx; i++) {
       xi = x[i];
       wi = w[i];
-      k = floor((xi - (double) 1.0)/dr); /* r[k] is 1 halfwidth below x[i] */
-      if(k < 0) k = 0;
+      k = floor((xi - (double) 1.0)/dr); 
+      if(k < 0) k = 0; /* r[k] is 1 halfwidth below x[i] */
       if(k < Nr) {
 	for(j = k; j < Nr; j++) {
 	  vij = r[j] - xi;
@@ -345,8 +345,8 @@ void fcolonel(
     for(i = 0; i < Nx; i++) {
       xi = x[i];
       wi = w[i];
-      k = floor((xi - (double) 1.0)/dr); /* r[k] is 1 halfwidth below x[i] */
-      if(k < 0) k = 0;
+      k = floor((xi - (double) 1.0)/dr); 
+      if(k < 0) k = 0; /* r[k] is 1 halfwidth below x[i] */
       if(k < Nr) {
 	for(j = k; j < Nr; j++) {
 	  vij = r[j] - xi;
@@ -367,8 +367,8 @@ void fcolonel(
     for(i = 0; i < Nx; i++) {
       xi = x[i];
       wi = w[i];
-      k = floor((xi - (double) 1.0)/dr); /* r[k] is 1 halfwidth below x[i] */
-      if(k < 0) k = 0;
+      k = floor((xi - (double) 1.0)/dr); 
+      if(k < 0) k = 0; /* r[k] is 1 halfwidth below x[i] */
       if(k < Nr) {
 	for(j = k; j < Nr; j++) {
 	  vij = r[j] - xi;
@@ -387,7 +387,7 @@ void fcolonel(
     return;
   } else {
     /* unrecognised kernel */
-    *errcode = ERR_UNKNOWN_KERNEL;
+    *errcode = ERR_KERNEL;
     return;
   }
 }
@@ -422,8 +422,8 @@ void bcolonel(
   Nr = *nr;
 
   *errcode = OK;
-  if(Nx < 0 || Nr <= 0) {
-    *errcode = ERR_NEGATIVE_LENGTH;
+  if(Nx < 0 || Nr <= 1) {
+    *errcode = ERR_LENGTH;
     return;
   }
 
@@ -621,7 +621,7 @@ void bcolonel(
     return;
   } else {
     /* unrecognised kernel */
-    *errcode = ERR_UNKNOWN_KERNEL;
+    *errcode = ERR_KERNEL;
     return;
   }
 }
@@ -657,8 +657,8 @@ void fbcolonel(
   Nr = *nr;
 
   *errcode = OK;
-  if(Nx < 0 || Nr <= 0) {
-    *errcode = ERR_NEGATIVE_LENGTH;
+  if(Nx < 0 || Nr < 2) {
+    *errcode = ERR_LENGTH;
     return;
   }
 
@@ -865,7 +865,7 @@ void fbcolonel(
     return;
   } else {
     /* unrecognised kernel */
-    *errcode = ERR_UNKNOWN_KERNEL;
+    *errcode = ERR_KERNEL;
     return;
   }
 }

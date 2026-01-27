@@ -18,10 +18,10 @@
 #define OPTCOSINE    7
 
 /* error codes */
-#define OK                         0
-#define ERR_NEGATIVE_LENGTH        1
-#define ERR_UNKNOWN_KERNEL         2
-#define NOT_SUPPORTED              3
+#define OK                 0
+#define ERR_LENGTH         1
+#define ERR_KERNEL         2
+#define NOT_SUPPORTED      3
 
 /* codes for zero boundary correction (density on positive half-line) */
 #define NONE        0

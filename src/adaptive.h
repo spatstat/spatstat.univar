@@ -46,7 +46,7 @@ void FNAME(
 
   *errcode = OK;
   if(Nx < 0 || Nr <= 0) {
-    *errcode = ERR_NEGATIVE_LENGTH;
+    *errcode = ERR_LENGTH;
     return;
   }
 
@@ -95,7 +95,7 @@ void FNAME(
     return;
   } else {
     /* unrecognised kernel */
-    *errcode = ERR_UNKNOWN_KERNEL;
+    *errcode = ERR_KERNEL;
     return;
   }
 }
