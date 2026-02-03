@@ -14,7 +14,7 @@
       weights = rep(1, length(x))/length(x), from, to = max(x), n = 256,
       zerocor = c("none", "weighted", "convolution", "reflection",
                   "bdrykern", "JonesFoster"),
-      fast=FALSE,
+      fast=FALSE, xout=NULL,
       internal=list())
 }
 \arguments{
@@ -74,6 +74,11 @@
     Logical value specifying whether to perform the calculation rapidly
     using the Fast Fourier Transform (\code{fast=TRUE})
     or to use slower, exact code (\code{fast=FALSE}, the default).
+  }
+  \item{xout}{
+    Optional. Numeric vector of values of \code{x} at which the
+    estimated density \code{f(x)} should be computed.
+    Overrides \code{from}, \code{to} and \code{n}.
   }
   \item{internal}{
     Internal use only.
