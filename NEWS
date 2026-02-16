@@ -1,4 +1,4 @@
-        CHANGES IN spatstat.univar VERSION 3.1-6.002
+        CHANGES IN spatstat.univar VERSION 3.1-6.003
 
 OVERVIEW
 
@@ -8,6 +8,9 @@ SIGNIFICANT USER-VISIBLE CHANGES
 
     o densityBC
     New argument 'xout'.
+
+    o densityBC
+    Slightly accelerated.
     
         CHANGES IN spatstat.univar VERSION 3.1-6
 

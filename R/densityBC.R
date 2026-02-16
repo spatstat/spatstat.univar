@@ -7,7 +7,7 @@
 #' Copyright (c) 2024-2026 Adrian Baddeley, Tilman Davies and Martin Hazelton
 #' GNU Public Licence (>= 2.0)
 #'
-#' $Revision: 1.2 $ $Date: 2026/02/02 07:53:50 $
+#' $Revision: 1.3 $ $Date: 2026/02/16 09:06:44 $
 
 densityBC <- function(x, kernel="epanechnikov", bw=NULL, 
                     ...,
@@ -40,6 +40,7 @@ densityBC <- function(x, kernel="epanechnikov", bw=NULL,
   x <- as.vector(x)
   stopifnot(is.numeric(x))
   nx <- length(x)
+  xrange <- range(x)
 
   stopifnot(is.numeric(weights))
   if(length(weights) == 1) {
@@ -57,6 +58,7 @@ densityBC <- function(x, kernel="epanechnikov", bw=NULL,
     ## arbitrary sequence
     r <- as.numeric(xout)
     nr <- length(r)
+    rrange <- range(r)
     even <- isTRUE(internal$even %orifnull% evenly.spaced(r))
   } else {
     ## equally spaced
@@ -71,6 +73,7 @@ densityBC <- function(x, kernel="epanechnikov", bw=NULL,
     nr <- as.integer(n)
 
     even <- TRUE
+    rrange <- c(from, to)
     r <- seq(from, to, length.out=nr)
   }
 
@@ -170,23 +173,25 @@ densityBC <- function(x, kernel="epanechnikov", bw=NULL,
   xscal <- x/h
   rscal <- r/h
 
+  xscalrange <- xrange/h
+  rscalrange <- rrange/h
+
   ## ......... rejig the data to implement boundary correction at r = 0 .....
 
   if(zerocor != "none") {
-    if(any(x < 0))
+    if(xrange[1L] < 0)
       stop("negative x values are illegal when boundary correction selected")
 
     ## threshold is halfwidth of support of kernel
     thresh <- if(ker == "gaussian") 3 else 1
 
     if(zerocor=="weighted") {
-      # identify x[i] whose kernels need renormalising
-      x.is.small <- (xscal <= thresh)
-      # divide weights[i] by right tail of kernel 
-      if(any(x.is.small)) {
+      ## identify x[i] whose kernels need renormalising
+      if(xscalrange[1L] <= thresh) {
+        x.is.small <- (xscal <= thresh)
+        ## divide weight[i] by right tail of kernel 
         mass <- pkernel(-xscal[x.is.small], ker, sd=1/cker, lower.tail=FALSE)
-        weights[x.is.small] <- ifelse(weights[x.is.small] <= 0, 0,
-                                      weights[x.is.small] / mass)
+        weights[x.is.small] <- pmax(0, weights[x.is.small]/mass)
       }
     }
 
@@ -220,11 +225,11 @@ densityBC <- function(x, kernel="epanechnikov", bw=NULL,
 
     if(zerocor != "bdrykern") {
       d <- unnormdensity(xscal, weights=weights,
-                         from=rscal[1], to=rscal[nr], n=nr,
+                         from=rscalrange[1L], to=rscalrange[2L], n=nr,
                          kernel=kernel, bw=1/cker)
     } else {
       d <- unnormdensity(xlarge, weights=wlarge,
-                         from=rscal[1], to=rscal[nr], n=nr,
+                         from=rscalrange[1L], to=rscalrange[2L], n=nr,
                          kernel=kernel, bw=1/cker)
     } 
     ffast <- d$y
@@ -362,12 +367,11 @@ densityBC <- function(x, kernel="epanechnikov", bw=NULL,
   ## correct density estimates
 
   if(zerocor == "convolution") {
-    r.is.small <- (rscal <= thresh)
-    if(any(r.is.small)) {
-        mass <- pkernel(-rscal[r.is.small], ker, sd=1/cker, lower.tail=FALSE)
-        f[r.is.small] <- ifelse(f[r.is.small] <= 0, 0,
-                                f[r.is.small] / mass)
-      }
+    if(rscalrange[1L] <= thresh) {
+      r.is.small <- (rscal <= thresh)
+      mass <- pkernel(-rscal[r.is.small], ker, sd=1/cker, lower.tail=FALSE)
+      f[r.is.small] <- pmax(0, f[r.is.small] / mass)
+    }
   }
 
   ## wrap up
