@@ -39,8 +39,8 @@ calculation of the one-dimensional heat kernel in an interval;
 Numerical integration including Stieltjes integrals
 and indefinite integrals.
 
-Code for random generation is mostly provided by 
-[`spatstat.random`](https://github.com/spatstat/spatstat.random)
+Some code for discrete probability distributions is provided by 
+[`spatstat.random`](https://github.com/spatstat/spatstat.random).
 
 ### Installing the package
 
