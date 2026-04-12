@@ -3,8 +3,8 @@
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/spatstat.univar)](http://CRAN.R-project.org/package=spatstat.univar) 
 [![GitHub R package version](https://img.shields.io/github/r-package/v/spatstat/spatstat.univar)](https://github.com/spatstat/spatstat.univar)
 
-This is the newest member of the `spatstat` package family.
-It contains code for estimation of **univariate probability distributions**.
+This member of the `spatstat` package family
+contains code for estimation of **univariate probability distributions**.
 
 You are viewing the GitHub repository which holds
 the latest **development version** of `spatstat.univar`.
@@ -39,8 +39,8 @@ calculation of the one-dimensional heat kernel in an interval;
 Numerical integration including Stieltjes integrals
 and indefinite integrals.
 
-Some of the code has been extracted from `spatstat.geom`,
-`spatstat.random` and `spatstat.explore`, while some is new.
+Code for random generation is mostly provided by 
+[`spatstat.random`](https://github.com/spatstat/spatstat.random)
 
 ### Installing the package
 
