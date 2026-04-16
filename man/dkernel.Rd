@@ -92,3 +92,4 @@ rkernel(n, kernel = "gaussian", mean = 0, sd = 1)
 \keyword{methods}
 \keyword{nonparametric}
 \keyword{smooth}
+\keyword{distribution}

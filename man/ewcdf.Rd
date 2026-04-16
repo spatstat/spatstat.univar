@@ -77,3 +77,4 @@ ewcdf(x, weights = NULL, normalise=TRUE, adjust=1)
 }
 \keyword{nonparametric}
 \keyword{univar}
+\keyword{distribution}

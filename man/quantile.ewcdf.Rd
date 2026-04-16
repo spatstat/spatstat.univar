@@ -71,3 +71,4 @@
 }
 \keyword{spatial}
 \keyword{nonparametric}
+\keyword{distribution}

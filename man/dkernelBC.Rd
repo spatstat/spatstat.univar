@@ -66,3 +66,7 @@ dkernelBC(x, mean, sd = 1, kernel = "gaussian",
   curve(dkernelBC(x, mean=1, zerocor="convolution"), to=5)
   curve(dkernelBC(x, mean=1, zerocor="bdrykern"), to=5)
 }
+\keyword{univar}
+\keyword{nonparametric}
+\keyword{smooth}
+\keyword{distribution}

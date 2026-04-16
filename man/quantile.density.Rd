@@ -75,3 +75,4 @@
 \keyword{methods}
 \keyword{univar}
 \keyword{nonparametric}
+\keyword{distribution}

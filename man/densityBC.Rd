@@ -287,4 +287,6 @@
 \keyword{methods}
 \keyword{nonparametric}
 \keyword{smooth}
+\keyword{univar}
+\keyword{distribution}
 
