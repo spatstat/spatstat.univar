@@ -1,3 +1,16 @@
+        CHANGES IN spatstat.univar VERSION 3.1-7.001
+
+OVERVIEW
+
+    o Distribution of a weighted sum of chi-squared variables.
+
+NEW FUNCTIONS
+
+    o dsocs, psocs, qsocs, rsocs
+    Probability density function, cumulative probability distribution function,
+    quantile function, and random generator for a random variable
+    which is a weighted sum of chi-squared random variables.
+    
         CHANGES IN spatstat.univar VERSION 3.1-7
 
 OVERVIEW
