@@ -16,6 +16,8 @@
 \alias{quantilefun.interpolatedCDF}
 \alias{IdenticalRowPair}
 \alias{IdenticalRows}
+\alias{socsCalc}
+\alias{socsTest}
 \alias{StieltjesCalc}
 \alias{StieltjesCalc.stepfun}
 \description{
@@ -38,6 +40,8 @@ match.kernel(kernel)
 \method{quantilefun}{interpolatedCDF}(x, \dots, type)
 IdenticalRowPair(i,j,a,b)
 IdenticalRows(i,j,a,b)
+socsCalc(lambda, zero, verbose)
+socsTest(statistic, lambda, data.name, \dots, method)
 StieltjesCalc(M, f, \dots)
 \method{StieltjesCalc}{stepfun}(M, f, \dots)
 }

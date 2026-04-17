@@ -12,7 +12,7 @@
 #'
 #'  Copyright (c) Adrian Baddeley 2026
 #'
-#' $Revision: 1.9 $ $Date: 2026/04/16 11:49:30 $
+#' $Revision: 1.12 $ $Date: 2026/04/17 02:29:26 $
 
 dsocs <- function(x, lambda, log=FALSE) {
   with(socsCalc(lambda), {
@@ -107,7 +107,7 @@ rsocs <- function(n, lambda, approx=FALSE) {
   })
 }
 
-socsCalc <- function(lambda, zero=sqrt(.Machine$double.eps), debug=FALSE) {
+socsCalc <- function(lambda, zero=sqrt(.Machine$double.eps), verbose=FALSE) {
   #' cumulants 2^(m-1) (m-1)! sum(lambda^m)
   kappa1 <- sum(lambda)
   kappa2 <- 2 * sum(lambda^2)
@@ -125,12 +125,12 @@ socsCalc <- function(lambda, zero=sqrt(.Machine$double.eps), debug=FALSE) {
     eta <- beta * df1/df2
     result <- list(case="I", df1=df1, beta=beta, df2=df2, eta=eta)
   } else if(abs(tau2) <= zero) {
-    ## Case II: Gamma (Satterthwaite-Welsh) approximation
+    ## Case II: Gamma (Satterthwaite-Welch) approximation
     alphaSW <- kappa1^2/kappa2
     betaSW <- kappa1/kappa2
     result <- list(case="II", alpha=alphaSW, beta=betaSW)
   } else if(tau1 <= zero) {
-    ## Case III: inverse gamma approximation
+    ## Case III: Inverse gamma approximation
     alphastar <- 2 + kappa1^2/kappa2^2
     betastar <- kappa1^3/kappa2 + kappa1
     result <- list(case="III", alpha=alphastar, beta=betastar)
@@ -140,9 +140,58 @@ socsCalc <- function(lambda, zero=sqrt(.Machine$double.eps), debug=FALSE) {
     betaSW <- kappa1/kappa2
     result <- list(case="IV", alpha=alphaSW, beta=betaSW)
   }
-  if(debug) 
+  if(verbose) 
     splat("Case", result$case, ":", 
           paste(names(result)[-1], "=", signif(as.numeric(result[-1]), 4),
                 collapse=", "))
   return(result)
+}
+
+#' Create an 'htest' object which represents the result of a test
+#' with test statistic 'statistic' referred to the distribution of
+#' a weighted sum of chi^2 variables with coefficients 'lambda'.
+#' 
+#' Any additional arguments '...' will be added to the object (name=value)
+#' 
+#' Arguments handled by print.htest include
+#'        parameter
+#'        alternative         'two.sided', 'less', 'greater'
+#'        null.value          numeric value or vector
+#'        conf.int            num[2] with attribute 'conf.level'
+#'        estimate            numeric value or vector
+#'
+#' Common additional arguments include 'observed', 'expected', 'residuals'
+
+socsTest <- function(statistic, lambda, data.name="x", ..., method=NULL) {
+  v <- socsCalc(lambda)
+  q <- unname(statistic)
+  with(v, {
+    switch(case,
+           I = {
+             ## F approximation: X ~ eta * F(df1, df2)
+             p <- pf(q/eta, df1, df2, lower.tail=FALSE, log.p=log.p)
+             m <- "Wood's F approximation"
+           },
+           II = ,
+           IV = {
+             ## gamma approximation: X ~ Gamma(alpha, beta)
+             p <- pgamma(q, alpha, beta, lower.tail=FALSE, log.p=log.p)
+             m <- "Satterthwaite-Welch gamma approximation"
+           },
+           III = {
+             ## inverse gamma approximation: 1/X ~ Gamma(alpha, beta)
+             p <- pgamma(1/q, alpha, beta, lower.tail=TRUE, log.p=log.p)
+             m <- "Inverse-gamma approximation"
+           })
+    result <-
+      structure(list(
+        statistic = statistic,
+        p.value   = p,
+        method    = c(method, m),
+        data.name = data.name,
+        ...
+      ),
+      class="htest")
+    return(result)
+    })
 }
