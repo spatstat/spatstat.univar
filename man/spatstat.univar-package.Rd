@@ -44,6 +44,9 @@
     \item{heat kernel:}{
       calculation of the one-dimensional heat kernel in an interval
     }
+    \item{approximations:}{
+      approximations to some intractable probability distributions
+    }
     \item{integration:}{
       Numerical integration including Stieltjes integrals
       and indefinite integrals.
@@ -183,7 +186,7 @@
     evaluate the kernel with boundary correction
   }
 
-  \bold{Heat kernels}
+  \bold{Heat kernel}
 
   The heat kernel in an interval can be calculated.
 
@@ -193,6 +196,22 @@
     calculate the heat kernel in an interval
   }
 
+  \bold{Approximations}
+
+  A few functions calculate approximations to probability distributions
+  which are analytically tractable.
+
+  For the distribution of a weighted Sum Of independent Chi-Squared
+  random variables:
+
+  \tabular{ll}{
+    \code{\link{dsocs}} \tab probability density \cr
+    \code{\link{psocs}} \tab cumulative distribution function \cr
+    \code{\link{qsocs}} \tab quantile function \cr
+    \code{\link{rsocs}} \tab random generator density 
+  }
+  
+  
   \bold{Integration}
 
   A few facilities are provided for calculating integrals

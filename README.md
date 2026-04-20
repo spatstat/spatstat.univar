@@ -35,6 +35,8 @@ function, quantiles, random generation, moments and partial
 moments of the standard smoothing kernels;
 - *heat kernel:*
 calculation of the one-dimensional heat kernel in an interval;
+- *approximations*
+ to some intractable probability distributions;
 - *integration:*
 Numerical integration including Stieltjes integrals
 and indefinite integrals.
