@@ -1,5 +1,5 @@
 Package: spatstat.univar
-Version: 3.1-7.003
+Version: 3.1-7.005
 Date: 2026-04-20
 Title: One-Dimensional Probability Distribution Support for the 'spatstat' Family 
 Authors@R: c(person("Adrian", "Baddeley", 
@@ -30,8 +30,8 @@ Imports: spatstat.utils (>= 3.2-2), graphics
 Description: Estimation of one-dimensional probability distributions
 	     including kernel density estimation, weighted empirical cumulative
 	     distribution functions, Kaplan-Meier and reduced-sample estimators
-	     for right-censored data, heat kernels, kernel properties,
-	     quantiles and integration.
+	     for right-censored data, heat kernels, special distributions,
+	     kernel properties, quantiles and integration.
 License: GPL (>= 2)
 URL: http://spatstat.org/
 NeedsCompilation: yes

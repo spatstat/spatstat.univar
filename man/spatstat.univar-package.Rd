@@ -41,11 +41,10 @@
       function, quantiles, random generation, moments and partial
       moments of the standard smoothing kernels
     }
-    \item{heat kernel:}{
-      calculation of the one-dimensional heat kernel in an interval
-    }
-    \item{approximations:}{
-      approximations to some intractable probability distributions
+    \item{special distributions:}{
+      including calculation of
+      the one-dimensional heat kernel in an interval,
+      and the distribution of a weighted sum of chi-squared variables
     }
     \item{integration:}{
       Numerical integration including Stieltjes integrals
@@ -186,31 +185,19 @@
     evaluate the kernel with boundary correction
   }
 
-  \bold{Heat kernel}
+  \bold{Special distributions}
 
-  The heat kernel in an interval can be calculated.
+  Support is provided for some special probability distributions:
 
   \tabular{ll}{  
     \code{\link{hotrod}}
     \tab
-    calculate the heat kernel in an interval
+    heat kernel in a one-dimensional interval
+    \cr
+    \code{\link{dsocs}}
+    \tab
+    distribution of a weighted sum of chi-squared variables
   }
-
-  \bold{Approximations}
-
-  A few functions calculate approximations to probability distributions
-  which are analytically tractable.
-
-  For the distribution of a weighted Sum Of independent Chi-Squared
-  random variables:
-
-  \tabular{ll}{
-    \code{\link{dsocs}} \tab probability density \cr
-    \code{\link{psocs}} \tab cumulative distribution function \cr
-    \code{\link{qsocs}} \tab quantile function \cr
-    \code{\link{rsocs}} \tab random generator density 
-  }
-  
   
   \bold{Integration}
 

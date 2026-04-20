@@ -4,18 +4,17 @@
 \alias{qsocs}
 \alias{rsocs}
 \title{
-  Approximate Distribution of a Linear Combination of Chi-Squared Variables
+  Distribution of a Linear Combination of Chi-Squared Variables
 }
 \description{
-  Approximations to the probability density, cumulative
-  probability distribution function, quantile function,
-  and random generation for a linear combination of
+  Probability density, cumulative probability distribution function,
+  quantile function, and random generation for a linear combination of
   \eqn{\chi^2}{chi^2} random variables.
 }
 \usage{
-dsocs(x, lambda, log= FALSE)
-psocs(q, lambda, lower.tail=TRUE, log.p=FALSE)
-qsocs(p, lambda, lower.tail=TRUE, log.p=FALSE) 
+dsocs(x, lambda, log= FALSE, method=c("Wood", "Farebrother"))
+psocs(q, lambda, lower.tail=TRUE, log.p=FALSE, method=c("Wood", "Farebrother"))
+qsocs(p, lambda, lower.tail=TRUE, log.p=FALSE, method=c("Wood", "Farebrother")) 
 rsocs(n, lambda, approx=FALSE)
 }
 \arguments{
@@ -37,10 +36,14 @@ rsocs(n, lambda, approx=FALSE)
     or according to the exact distribution (\code{approx=FALSE}, the
     default).
   }
+  \item{method}{
+    Character string (partially matched) specifying
+    whether to use Wood's approximation (\code{method="Wood"}, the
+    default) or Farebrother's algorithm (\code{method="Farebrother"}).
+  }
 }
 \details{
-  These functions calculate approximations to
-  the probability density (\code{dsocs}),
+  These functions calculate the probability density (\code{dsocs}),
   cumulative distribution function (\code{psocs}) and
   quantile function (\code{qsocs}), and generate random realisations
   (\code{rsocs}) of, a random variable \eqn{Y} such that
@@ -58,22 +61,36 @@ rsocs(n, lambda, approx=FALSE)
 
   The argument \code{lambda} contains the coefficients
   \eqn{\lambda_1,\ldots,\lambda_m}{lambda[1], ..., lambda[m]}.
-  
-  The approximation method of Wood (1989) is used.
-  The distribution of \eqn{Y} is approximated by an
-  \eqn{F} distribution, except in marginal cases when it is approximated
-  by a gamma distribution or inverse-gamma distribution.
+
+  \itemize{
+    \item if \code{method="Wood"} (the default),
+    the approximation method of Wood (1989) is used.
+    The distribution of \eqn{Y} is approximated by an
+    \eqn{F} distribution, except in marginal cases when it is approximated
+    by a gamma distribution or inverse-gamma distribution.
+    \item if \code{method="Farebrother"}, the
+    numerical algorithm of Farebrother (1984) is used.
+    The cumulative distribution function and the probability density
+    are evaluated to a high level of precision
+    using a truncated infinite series. The quantile function is
+    evaluated by root-finding.
+  }
 
   For the random generator \code{rsocs}, the default behaviour is to
   generate realisations of \eqn{Y} according to its exact distribution
   by constructing \eqn{\chi^2}{chi^2} random variables and summing.
   If \code{approx=TRUE}, then the realisations are generated from the
-  approximate distribution instead.
+  (Wood's method) approximate distribution instead.
 }
 \value{
   A numeric vector.
 }
 \references{
+  Farebrother, R.W. (1984)
+  Algorithm AS 204:
+  The distribution of a positive linear combination of \eqn{\chi^2}{chi^2}
+  random variables. \emph{Applied Statistics} \bold{33} #3 (1984) 332--339.
+
   Wood, A.T.A (1989)
   An F approximation to the distribution of a linear combination
   of chi-squared variables.

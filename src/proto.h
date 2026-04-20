@@ -26,6 +26,7 @@ void colonel(int *, int *, double *, double *, int *, double *, double *, int *)
 void fbcolonel(int *, int *, double *, double *, int *, double *, double *, double *, double *, double *, double *, double *, int *); 
 void bcolonel(int *, int *, double *, double *, int *, double *, double *, double *, double *, double *, double *, double *, int *);
 void tabsumweight(int *, double *, double *, int *, double *, double *);
+void farebro(double *, int *, double *, int *, double *, int *, double *, int *, double *, double *, int *, double *, double *);
 void hotrodInsul(int *, double *, double *, double *, double *, int *, double *); 
 void hotrodAbsorb(int *, double *, double *, double *, double *, int *, double *);
 /*

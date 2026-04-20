@@ -24,6 +24,7 @@ static const R_CMethodDef CEntries[] = {
     {"adaptKDEweight",  (DL_FUNC) &adaptKDEweight,   9},
     {"bcolonel",        (DL_FUNC) &bcolonel,        13},
     {"colonel",         (DL_FUNC) &colonel,          8},
+    {"farebro",         (DL_FUNC) &farebro,         13},
     {"fbcolonel",       (DL_FUNC) &fbcolonel,       13},
     {"fcolonel",        (DL_FUNC) &fcolonel,         8},
     {"hotrodAbsorb",    (DL_FUNC) &hotrodAbsorb,     7},

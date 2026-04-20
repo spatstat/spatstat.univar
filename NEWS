@@ -1,4 +1,4 @@
-        CHANGES IN spatstat.univar VERSION 3.1-7.003
+        CHANGES IN spatstat.univar VERSION 3.1-7.005
 
 OVERVIEW
 
@@ -7,12 +7,9 @@ OVERVIEW
 NEW FUNCTIONS
 
     o dsocs, psocs, qsocs
-    Approximations to the probability density function, cumulative probability
-    distribution function, and quantile function, for a random variable
+    Probability density function, cumulative probability distribution function,
+    quantile function and random generator for a random variable
     which is a weighted Sum Of Chi-Squared random variables.
-
-    o rsocs
-    Generate a weighted Sum Of Chi-Squared random variates.
 
         CHANGES IN spatstat.univar VERSION 3.1-7
 

@@ -33,10 +33,9 @@ and boundary corrections for densities restricted to the positive half-line;
 including calculation of the probability density, cumulative distribution
 function, quantiles, random generation, moments and partial
 moments of the standard smoothing kernels;
-- *heat kernel:*
-calculation of the one-dimensional heat kernel in an interval;
-- *approximations*
- to some intractable probability distributions;
+- *special distributions:*
+including calculation of the one-dimensional heat kernel in an interval,
+and the distribution of a weighted sum of chi-squared variables;
 - *integration:*
 Numerical integration including Stieltjes integrals
 and indefinite integrals.

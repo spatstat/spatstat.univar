@@ -1,20 +1,39 @@
 #'
 #'    socs.R
 #'
-#'  Code for approximating the distribution of a weighted sum of chi^2_1
+#'  Code for the distribution of a weighted sum of chi^2_1
 #'
-#'  Based on
+#'  Based on Wood's approximation
+#' 
 #'    A.T.A. Wood (1989)
 #'    An F approximation to the distribution of a
 #'    linear combination of chi-squared variables
 #'    Communications in Statistics - Simulation and Computation
 #'    18:4, 1439-1456
 #'
+#'  and Farebrother's algorithm
+#' 
+#'   R.W. Farebrother (1984)
+#'   Algorithm AS 204:
+#'   The distribution of a positive linear combination of \chi^2
+#'   random variables. Applied Statistics 33 #3 (1984) 332--339
+#'
 #'  Copyright (c) Adrian Baddeley 2026
 #'
-#' $Revision: 1.12 $ $Date: 2026/04/17 02:29:26 $
+#' $Revision: 1.14 $ $Date: 2026/04/20 08:44:12 $
 
-dsocs <- function(x, lambda, log=FALSE) {
+dsocs <- function(x, lambda, log=FALSE, method=c("Wood", "Farebrother")) {
+  method <- match.arg(method)
+  if(method == "Farebrother") {
+    a <- farebro(lambda, x=x, warn=FALSE)
+    d <- a$d
+    if(log) d <- log(ifelse(is.finite(d) & d > 0, d, 1))
+    if(any(bad <- (a$ifault == 0))) {
+      ## fall back on Wood's approximation
+      d[bad] <- dsocs(x[bad], lambda, log=log, method="Wood")
+    }
+    return(d)
+  }
   with(socsCalc(lambda), {
     switch(case,
            I = {
@@ -39,7 +58,21 @@ dsocs <- function(x, lambda, log=FALSE) {
   })
 }
 
-psocs <- function(q, lambda, lower.tail=TRUE, log.p=FALSE) {
+psocs <- function(q, lambda, lower.tail=TRUE, log.p=FALSE,
+                  method=c("Wood", "Farebrother")) {
+  method <- match.arg(method)
+  if(method == "Farebrother") {
+    a <- farebro(lambda, x=q, warn=FALSE)
+    p <- a$p
+    if(!lower.tail) p <- 1 - p
+    if(log.p) p <- log(ifelse(is.finite(p) & p > 0, p, 1))
+    if(any(bad <- (a$ifault == 0))) {
+      ## fall back on Wood's approximation
+      p[bad] <- psocs(q[bad], lambda, lower.tail=lower.tail, log.p=log.p,
+                      method="Wood")
+    }
+    return(p)
+  }
   with(socsCalc(lambda), {
     switch(case,
            I = {
@@ -59,25 +92,54 @@ psocs <- function(q, lambda, lower.tail=TRUE, log.p=FALSE) {
   })
 }
 
-qsocs <- function(p, lambda, lower.tail=TRUE, log.p=FALSE) {
-  with(socsCalc(lambda), {
-    switch(case,
-           I = {
-             ## F approximation: X ~ eta * F(df1, df2)
-             q <- eta * qf(p, df1, df2, lower.tail=lower.tail, log.p=log.p)
-           },
-           II = ,
-           IV = {
-             ## gamma approximation: X ~ Gamma(alpha, beta)
-             q <- qgamma(p, alpha, beta, lower.tail=lower.tail, log.p=log.p)
-           },
-           III = {
-             ## inverse gamma approximation: 1/X ~ Gamma(alpha, beta)
-             q <- 1/qgamma(p, alpha, beta, lower.tail= !lower.tail, log.p=log.p)
+qsocs <- function(p, lambda, lower.tail=TRUE, log.p=FALSE, method=c("Wood", "Farebrother")) {
+  method <- match.arg(method)
+  switch(method,
+         Farebrother = {
+           n <- length(p)
+           q <- numeric(n)
+           pzero <- if(lower.tail) 0 else 1
+           pInf  <- if(lower.tail) 1 else 0
+           if(log.p) {
+             pzero <- log(pzero)
+             pInf <- log(pInf)
            }
-           )
-    return(q)
-  })
+           if(any(trivial <- (p == pzero | p == pInf))) {
+             q[ p == pzero ] <- 0
+             q[ p == pInf  ] <- Inf
+           }
+           for(i in which(!trivial)) {
+             q[i] <- uniroot(function(x, ..., pee) { pee - psocs(x, ...) },
+                             c(0,1),
+                             pee = p[i],
+                             lambda=lambda, lower.tail=lower.tail, log.p=log.p,
+                             method="Farebrother")$root
+           }
+           return(q)
+         },
+         Wood = {
+           with(socsCalc(lambda), {
+             switch(case,
+                    I = {
+                      ## F approximation: X ~ eta * F(df1, df2)
+                      q <- eta * qf(p, df1, df2,
+                                    lower.tail=lower.tail, log.p=log.p)
+                    },
+                    II = ,
+                    IV = {
+                      ## gamma approximation: X ~ Gamma(alpha, beta)
+                      q <- qgamma(p, alpha, beta,
+                                  lower.tail=lower.tail, log.p=log.p)
+                    },
+                    III = {
+                      ## inverse gamma approximation: 1/X ~ Gamma(alpha, beta)
+                      q <- 1/qgamma(p, alpha, beta,
+                                    lower.tail= !lower.tail, log.p=log.p)
+                    }
+                    )
+             return(q)
+           })
+         })
 }
 
 rsocs <- function(n, lambda, approx=FALSE) {
@@ -125,7 +187,7 @@ socsCalc <- function(lambda, zero=sqrt(.Machine$double.eps), verbose=FALSE) {
     eta <- beta * df1/df2
     result <- list(case="I", df1=df1, beta=beta, df2=df2, eta=eta)
   } else if(abs(tau2) <= zero) {
-    ## Case II: Gamma (Satterthwaite-Welch) approximation
+    ## Case II: Gamma (Satterthwaite-Welsh) approximation
     alphaSW <- kappa1^2/kappa2
     betaSW <- kappa1/kappa2
     result <- list(case="II", alpha=alphaSW, beta=betaSW)
@@ -176,7 +238,7 @@ socsTest <- function(statistic, lambda, data.name="x", ..., method=NULL) {
            IV = {
              ## gamma approximation: X ~ Gamma(alpha, beta)
              p <- pgamma(q, alpha, beta, lower.tail=FALSE, log.p=log.p)
-             m <- "Satterthwaite-Welch gamma approximation"
+             m <- "Satterthwaite-Welsh gamma approximation"
            },
            III = {
              ## inverse gamma approximation: 1/X ~ Gamma(alpha, beta)
