@@ -106,27 +106,27 @@ rsocs(n, lambda, approx=FALSE)
     to high precision (such that the error in the probability value
     is less than \code{1e-6}) by Farebrother's (1989) algorithm.
     Quantiles are evaluated by root-finding using
-    \code{\link[stats]{uniroot}} with a tolerance of
-    \code{.Machine$double.eps^(1/4)} (about \code{1e-4}) for the
-    error in the probability value.
-    If either of these algorithms reports an error,
-    the computation falls back to Wood's approximation.
+    \code{\link[stats]{uniroot}} with a tolerance of \code{1e-6}
+    for the discrepancy (the difference between the desired probability
+    and the probability calculated by Farebrother's algorithm)
+    so that the true error in the probability value is less than \code{2e-6}.
+    If either the Farebrother algorithm or \code{\link[stats]{uniroot}}
+    reports an error, the computation falls back on Wood's approximation.
   }
   For the random generator \code{rsocs},
   \itemize{
     \item
     if \code{approx=FALSE} (the default),
-    we generate realisations of \eqn{Y} according to its exact distribution
+    exact realisations of \eqn{Y} are generated 
     by generating standard normal random variables using
-    \code{\link[stats]{rnorm}}, squaring, and summing them with
-    the weights \code{lambda}. 
+    \code{\link[stats]{rnorm}}, squaring,
+    and summing with the weights \code{lambda}. 
     \item
     if \code{approx=TRUE},
     realisations of the approximate distribution
     are generated using the relevant function
     \code{\link[stats]{rf}} or \code{\link[stats]{rgamma}}
-    from the \pkg{stats} package, using the parameters calculated
-    by Wood's approximation.
+    with the parameters calculated by Wood's approximation.
   }
 }
 \value{
@@ -156,12 +156,22 @@ rsocs(n, lambda, approx=FALSE)
    co <- c(1, 0.5, 0.3)
    xx <- rsocs(N, co)
    plot(density(xx))
-   curve(dsocs(x, co), add=TRUE, col=8, lwd=3)
+   curve(dsocs(x, co), add=TRUE, col=8, lwd=5)
    curve(dsocs(x, co, method="F"), add=TRUE, col=2)
    qqplot(xx, qsocs(ppoints(N), co))
    abline(0,1)
    plot(ppoints(N), psocs(sort(xx), co))
    abline(0,1)
+
+   ## accuracy of quantiles: Wood (1989) table II, case I
+   lam <- c(0.5, rep(0.1, 5))
+   pp <- c(0.01, 0.025, 0.05, 0.1, 0.25, 0.75, 0.9, 0.95, 0.975, 0.99)
+   qe <- qsocs(pp, lam, method="F")
+   qw <- qsocs(pp, lam, method="W")
+   ta <- rbind(exact=qe, Wood=qw)
+   ta <- round(ta, 3)
+   colnames(ta) <- paste0(round(100 * pp, 1), "\%")
+   ta
 }
 \keyword{distribution}
 \keyword{univar}

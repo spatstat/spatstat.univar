@@ -21,7 +21,7 @@
 #'  Copyright (c) Adrian Baddeley 2026
 #'  GNU Public Licence (>= 2.0)
 #'
-#' $Revision: 1.19 $ $Date: 2026/04/21 02:38:13 $
+#' $Revision: 1.21 $ $Date: 2026/04/21 03:44:59 $
 
 dsocs <- function(x, lambda, log=FALSE,
                   method=c("Wood", "Farebrother")) {
@@ -68,7 +68,7 @@ psocs <- function(q, lambda, lower.tail=TRUE, log.p=FALSE,
     p <- a$p
     if(!lower.tail) p <- 1 - p
     if(log.p) p <- log(ifelse(is.finite(p) & p > 0, p, 1))
-    if(any(bad <- (a$ifault == 0))) {
+    if(any(bad <- (a$ifault != 0))) {
       ## fall back on Wood's approximation
       p[bad] <- psocs(q[bad], lambda, lower.tail=lower.tail, log.p=log.p,
                       method="Wood")
@@ -147,6 +147,7 @@ qsocs <- function(p, lambda, lower.tail=TRUE, log.p=FALSE,
                              lambda = lambda,
                              lower.tail = lower.tail,
                              log.p = log.p,
+                             tol = 1e-6,
                              method="Farebrother")$root
            }
          })
