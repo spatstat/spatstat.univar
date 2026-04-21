@@ -104,7 +104,8 @@ rsocs(n, lambda, approx=FALSE)
     if \code{method="Farebrother"},
     the probability density and distribution function are calculated
     to high precision (such that the error in the probability value
-    is less than \code{1e-6}) by Farebrother's (1989) algorithm.
+    is less than \code{1e-6}) by Farebrother's (1984) algorithm
+    as implemented in \code{\link{farebro}}.
     Quantiles are evaluated by root-finding using
     \code{\link[stats]{uniroot}} with a tolerance of \code{1e-6}
     for the discrepancy (the difference between the desired probability
@@ -136,7 +137,7 @@ rsocs(n, lambda, approx=FALSE)
   Farebrother, R.W. (1984)
   Algorithm AS 204:
   The distribution of a positive linear combination of \eqn{\chi^2}{chi^2}
-  random variables. \emph{Applied Statistics} \bold{33} #3 (1984) 332--339.
+  random variables. \emph{Applied Statistics} \bold{33} (3) 332--339.
 
   Wood, A.T.A (1989)
   An F approximation to the distribution of a linear combination
@@ -149,10 +150,13 @@ rsocs(n, lambda, approx=FALSE)
 }
 \seealso{
   \code{\link[stats:FDist]{pf}},
-  \code{\link[stats:GammaDist]{pgamma}}
+  \code{\link[stats:GammaDist]{pgamma}},
+  \code{\link{farebro}}, \code{\link[stats]{uniroot}}
+  for underlying algorithms.
 }
 \examples{
-   N <- if(interactive()) 1000 else 50
+   online <- interactive()
+   N <- if(online) 1000 else 50
    co <- c(1, 0.5, 0.3)
    xx <- rsocs(N, co)
    plot(density(xx))
@@ -165,7 +169,11 @@ rsocs(n, lambda, approx=FALSE)
 
    ## accuracy of quantiles: Wood (1989) table II, case I
    lam <- c(0.5, rep(0.1, 5))
-   pp <- c(0.01, 0.025, 0.05, 0.1, 0.25, 0.75, 0.9, 0.95, 0.975, 0.99)
+   pp <- if(online) {
+           c(0.01, 0.025, 0.05, 0.1, 0.25, 0.75, 0.9, 0.95, 0.975, 0.99)
+          } else {
+           c(0.05, 0.95)
+          }
    qe <- qsocs(pp, lam, method="F")
    qw <- qsocs(pp, lam, method="W")
    ta <- rbind(exact=qe, Wood=qw)

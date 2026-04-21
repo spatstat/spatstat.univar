@@ -1,4 +1,4 @@
-        CHANGES IN spatstat.univar VERSION 3.1-7.007
+        CHANGES IN spatstat.univar VERSION 3.1-7.008
 
 OVERVIEW
 
@@ -10,6 +10,10 @@ NEW FUNCTIONS
     Probability density function, cumulative probability distribution function,
     quantile function and random generator for a random variable
     which is a weighted Sum Of Chi-Squared random variables.
+
+    o farebro
+    Farebrother's Algorithm for the cumulative probability of
+    a weighted sum of non-central chi-squared variables.
 
         CHANGES IN spatstat.univar VERSION 3.1-7
 

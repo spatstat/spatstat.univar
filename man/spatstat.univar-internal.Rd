@@ -4,7 +4,6 @@
 \alias{breakpts}
 \alias{breakpts.from.r}
 \alias{check.hist.lengths}
-\alias{farebro}
 \alias{check.bandwidth}
 \alias{kermom}
 \alias{km.rs.opt}
@@ -29,7 +28,6 @@ as.breakpts(\dots)
 breakpts(val, maxi, even, npos, step)
 breakpts.from.r(r)
 check.hist.lengths(hist, breaks)
-farebro(lambda, mult, delta, x, \dots, maxit, eps, warn)
 check.bandwidth(bw, descrip, fatal)
 kermom(m, r, kernel, mean, sd)
 km.rs.opt(o, cc, d, breaks, KM, RS)

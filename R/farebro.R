@@ -11,7 +11,7 @@
 #'
 #'   R and C implementation by Adrian Baddeley 2026
 #'
-#'   $Revision: 1.7 $ $Date: 2026/04/21 01:23:24 $
+#'   $Revision: 1.8 $ $Date: 2026/04/21 06:33:54 $
 
 farebro <- function(lambda, mult=1, delta=0, x, ...,
                     maxit=1e6, eps=1e-6, warn=TRUE) {
@@ -29,7 +29,8 @@ farebro <- function(lambda, mult=1, delta=0, x, ...,
     nx <- length(x)
   }
   if(nx == 0) {
-    result <- data.frame(x=numeric(0), p=numeric(0), d=numeric(0))
+    result <- data.frame(x=numeric(0), p=numeric(0), d=numeric(0),
+                         ifault=integer(0))
   } else {
     z <- .C(SK_farebro,
             lambda = as.double(df$lambda),
