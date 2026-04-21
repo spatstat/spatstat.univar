@@ -12,7 +12,10 @@
   Translated to C by Adrian Baddeley 2026
   Modified to accept a vector of function arguments 'x'
 
-  $Revision: 1.6 $ $Date: 2026/04/20 07:38:49 $
+  Copyright (c) Adrian Baddeley 2026
+  GNU Public Licence (>= 2.0)
+
+  $Revision: 1.7 $ $Date: 2026/04/21 02:42:25 $
 
 */
 

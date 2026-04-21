@@ -3,26 +3,28 @@
 #'
 #'  Code for the distribution of a weighted sum of chi^2_1
 #'
-#'  Based on Wood's approximation
-#' 
-#'    A.T.A. Wood (1989)
-#'    An F approximation to the distribution of a
-#'    linear combination of chi-squared variables
-#'    Communications in Statistics - Simulation and Computation
-#'    18:4, 1439-1456
-#'
-#'  and Farebrother's algorithm
+#'  Based on Wood's approximation (F, gamma or inverse-gamma)
+#'  and Farebrother's algorithm (truncated infinite series)
 #' 
 #'   R.W. Farebrother (1984)
 #'   Algorithm AS 204:
 #'   The distribution of a positive linear combination of \chi^2
 #'   random variables. Applied Statistics 33 #3 (1984) 332--339
+#' 
+#'   A.T.A. Wood (1989)
+#'   An F approximation to the distribution of a
+#'   linear combination of chi-squared variables
+#'   Communications in Statistics - Simulation and Computation
+#'   18:4, 1439-1456
 #'
+#' 
 #'  Copyright (c) Adrian Baddeley 2026
+#'  GNU Public Licence (>= 2.0)
 #'
-#' $Revision: 1.14 $ $Date: 2026/04/20 08:44:12 $
+#' $Revision: 1.19 $ $Date: 2026/04/21 02:38:13 $
 
-dsocs <- function(x, lambda, log=FALSE, method=c("Wood", "Farebrother")) {
+dsocs <- function(x, lambda, log=FALSE,
+                  method=c("Wood", "Farebrother")) {
   method <- match.arg(method)
   if(method == "Farebrother") {
     a <- farebro(lambda, x=x, warn=FALSE)
@@ -34,7 +36,7 @@ dsocs <- function(x, lambda, log=FALSE, method=c("Wood", "Farebrother")) {
     }
     return(d)
   }
-  with(socsCalc(lambda), {
+  with(woodCalc(lambda), {
     switch(case,
            I = {
              ## F approximation: X ~ eta * F(df1, df2)
@@ -73,7 +75,7 @@ psocs <- function(q, lambda, lower.tail=TRUE, log.p=FALSE,
     }
     return(p)
   }
-  with(socsCalc(lambda), {
+  with(woodCalc(lambda), {
     switch(case,
            I = {
              ## F approximation: X ~ eta * F(df1, df2)
@@ -92,12 +94,38 @@ psocs <- function(q, lambda, lower.tail=TRUE, log.p=FALSE,
   })
 }
 
-qsocs <- function(p, lambda, lower.tail=TRUE, log.p=FALSE, method=c("Wood", "Farebrother")) {
+qsocs <- function(p, lambda, lower.tail=TRUE, log.p=FALSE,
+                  method=c("Wood", "Farebrother")) {
   method <- match.arg(method)
+  ## First calculate using Wood's approximation
+  qwood <- with(woodCalc(lambda), {
+    switch(case,
+           I = {
+             ## F approximation: X ~ eta * F(df1, df2)
+             q <- eta * qf(p, df1, df2,
+                           lower.tail=lower.tail, log.p=log.p)
+           },
+           II = ,
+           IV = {
+             ## gamma approximation: X ~ Gamma(alpha, beta)
+             q <- qgamma(p, alpha, beta,
+                         lower.tail=lower.tail, log.p=log.p)
+           },
+           III = {
+             ## inverse gamma approximation: 1/X ~ Gamma(alpha, beta)
+             q <- 1/qgamma(p, alpha, beta,
+                           lower.tail= !lower.tail, log.p=log.p)
+           }
+           )
+           q
+  })
   switch(method,
+         Wood = {
+           q <- qwood
+         },
          Farebrother = {
-           n <- length(p)
-           q <- numeric(n)
+           q <- numeric(length(p))
+           ## handle p = 0 or 1
            pzero <- if(lower.tail) 0 else 1
            pInf  <- if(lower.tail) 1 else 0
            if(log.p) {
@@ -108,38 +136,21 @@ qsocs <- function(p, lambda, lower.tail=TRUE, log.p=FALSE, method=c("Wood", "Far
              q[ p == pzero ] <- 0
              q[ p == pInf  ] <- Inf
            }
+           ## use Wood approximation to determine search interval
+           qlower <- 0.5 * qwood
+           qupper <- 1.5 * qwood
+           ## search
            for(i in which(!trivial)) {
-             q[i] <- uniroot(function(x, ..., pee) { pee - psocs(x, ...) },
-                             c(0,1),
-                             pee = p[i],
-                             lambda=lambda, lower.tail=lower.tail, log.p=log.p,
+             q[i] <- uniroot(function(x, ..., prob) { prob - psocs(x, ...) },
+                             interval = c(qlower[i], qupper[i]),
+                             prob = p[i],
+                             lambda = lambda,
+                             lower.tail = lower.tail,
+                             log.p = log.p,
                              method="Farebrother")$root
            }
-           return(q)
-         },
-         Wood = {
-           with(socsCalc(lambda), {
-             switch(case,
-                    I = {
-                      ## F approximation: X ~ eta * F(df1, df2)
-                      q <- eta * qf(p, df1, df2,
-                                    lower.tail=lower.tail, log.p=log.p)
-                    },
-                    II = ,
-                    IV = {
-                      ## gamma approximation: X ~ Gamma(alpha, beta)
-                      q <- qgamma(p, alpha, beta,
-                                  lower.tail=lower.tail, log.p=log.p)
-                    },
-                    III = {
-                      ## inverse gamma approximation: 1/X ~ Gamma(alpha, beta)
-                      q <- 1/qgamma(p, alpha, beta,
-                                    lower.tail= !lower.tail, log.p=log.p)
-                    }
-                    )
-             return(q)
-           })
          })
+  return(q)
 }
 
 rsocs <- function(n, lambda, approx=FALSE) {
@@ -150,7 +161,7 @@ rsocs <- function(n, lambda, approx=FALSE) {
     x <- matrix(rnorm(n * m)^2, n, m) %*% lambda
     return(x)
   }
-  with(socsCalc(lambda), {
+  with(woodCalc(lambda), {
     switch(case,
            I = {
              ## F approximation: eta * F(df1, df2)
@@ -169,7 +180,7 @@ rsocs <- function(n, lambda, approx=FALSE) {
   })
 }
 
-socsCalc <- function(lambda, zero=sqrt(.Machine$double.eps), verbose=FALSE) {
+woodCalc <- function(lambda, zero=sqrt(.Machine$double.eps), verbose=FALSE) {
   #' cumulants 2^(m-1) (m-1)! sum(lambda^m)
   kappa1 <- sum(lambda)
   kappa2 <- 2 * sum(lambda^2)
@@ -224,36 +235,34 @@ socsCalc <- function(lambda, zero=sqrt(.Machine$double.eps), verbose=FALSE) {
 #'
 #' Common additional arguments include 'observed', 'expected', 'residuals'
 
-socsTest <- function(statistic, lambda, data.name="x", ..., method=NULL) {
-  v <- socsCalc(lambda)
-  q <- unname(statistic)
-  with(v, {
-    switch(case,
-           I = {
-             ## F approximation: X ~ eta * F(df1, df2)
-             p <- pf(q/eta, df1, df2, lower.tail=FALSE, log.p=log.p)
-             m <- "Wood's F approximation"
-           },
-           II = ,
-           IV = {
-             ## gamma approximation: X ~ Gamma(alpha, beta)
-             p <- pgamma(q, alpha, beta, lower.tail=FALSE, log.p=log.p)
-             m <- "Satterthwaite-Welsh gamma approximation"
-           },
-           III = {
-             ## inverse gamma approximation: 1/X ~ Gamma(alpha, beta)
-             p <- pgamma(1/q, alpha, beta, lower.tail=TRUE, log.p=log.p)
-             m <- "Inverse-gamma approximation"
-           })
-    result <-
-      structure(list(
-        statistic = statistic,
-        p.value   = p,
-        method    = c(method, m),
-        data.name = data.name,
-        ...
-      ),
-      class="htest")
-    return(result)
-    })
+socsTest <- function(statistic, lambda, data.name="x", ...,
+                     approxmethod=c("Wood", "Farebrother"),
+                     testmethod=NULL) {
+  approxmethod <- match.arg(approxmethod)
+  stopifnot(length(statistic) == 1)
+  p <- psocs(unname(statistic), lambda, lower.tail=FALSE, log.p=FALSE,
+             method=approxmethod)
+  switch(approxmethod,
+         Farebrother = {
+           calcname <- "Farebrother algorithm AS204"
+         },
+         Wood = {
+           v <- woodCalc(lambda)
+           calcname <- switch(v$case,
+                              I = "Wood's F approximation",
+                              II = ,
+                              IV = "Satterthwaite-Welsh gamma approximation",
+                              III = "Inverse-gamma approximation",
+                              NULL)
+         })
+  result <-
+    structure(list(
+      statistic = statistic,
+      p.value   = p,
+      method    = c(testmethod, calcname),
+      data.name = data.name,
+      ...
+    ),
+    class="htest")
+  return(result)
 }

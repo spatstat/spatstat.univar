@@ -39,7 +39,8 @@ rsocs(n, lambda, approx=FALSE)
   \item{method}{
     Character string (partially matched) specifying
     whether to use Wood's approximation (\code{method="Wood"}, the
-    default) or Farebrother's algorithm (\code{method="Farebrother"}).
+    default) or Farebrother's numerically exact
+    algorithm (\code{method="Farebrother"}).
   }
 }
 \details{
@@ -63,24 +64,70 @@ rsocs(n, lambda, approx=FALSE)
   \eqn{\lambda_1,\ldots,\lambda_m}{lambda[1], ..., lambda[m]}.
 
   \itemize{
-    \item if \code{method="Wood"} (the default),
-    the approximation method of Wood (1989) is used.
-    The distribution of \eqn{Y} is approximated by an
+    \item
+    if \code{method="Wood"} (the default),
+    the approximation of Wood (1989) is used:
+    the distribution of \eqn{Y} is approximated by an
     \eqn{F} distribution, except in marginal cases when it is approximated
     by a gamma distribution or inverse-gamma distribution.
-    \item if \code{method="Farebrother"}, the
+    This method is faster.
+    \item
+    if \code{method="Farebrother"}, the
     numerical algorithm of Farebrother (1984) is used.
     The cumulative distribution function and the probability density
     are evaluated to a high level of precision
     using a truncated infinite series. The quantile function is
     evaluated by root-finding.
   }
-
   For the random generator \code{rsocs}, the default behaviour is to
   generate realisations of \eqn{Y} according to its exact distribution
   by constructing \eqn{\chi^2}{chi^2} random variables and summing.
   If \code{approx=TRUE}, then the realisations are generated from the
   (Wood's method) approximate distribution instead.
+}
+\section{Details of computation}{
+  For the probability density \code{dsocs}, distribution function \code{psocs}
+  and quantile function \code{qsocs}:
+  \itemize{
+    \item
+    if \code{method="Wood"} (the default),
+    the probability density, distribution function and quantiles are
+    computed using the relevant functions from the \pkg{stats} package:
+    \code{\link[stats]{df}}, \code{\link[stats]{pf}}, \code{\link[stats]{qf}}
+    or \code{\link[stats]{dgamma}}, \code{\link[stats]{pgamma}},
+    \code{\link[stats]{qgamma}}, using the parameters calculated
+    by Wood's approximation.
+    This method is faster, and the \pkg{stats} package functions have
+    been thoroughly checked to ensure logically consistent behaviour
+    for extreme values of the arguments.     
+    \item
+    if \code{method="Farebrother"},
+    the probability density and distribution function are calculated
+    to high precision (such that the error in the probability value
+    is less than \code{1e-6}) by Farebrother's (1989) algorithm.
+    Quantiles are evaluated by root-finding using
+    \code{\link[stats]{uniroot}} with a tolerance of
+    \code{.Machine$double.eps^(1/4)} (about \code{1e-4}) for the
+    error in the probability value.
+    If either of these algorithms reports an error,
+    the computation falls back to Wood's approximation.
+  }
+  For the random generator \code{rsocs},
+  \itemize{
+    \item
+    if \code{approx=FALSE} (the default),
+    we generate realisations of \eqn{Y} according to its exact distribution
+    by generating standard normal random variables using
+    \code{\link[stats]{rnorm}}, squaring, and summing them with
+    the weights \code{lambda}. 
+    \item
+    if \code{approx=TRUE},
+    realisations of the approximate distribution
+    are generated using the relevant function
+    \code{\link[stats]{rf}} or \code{\link[stats]{rgamma}}
+    from the \pkg{stats} package, using the parameters calculated
+    by Wood's approximation.
+  }
 }
 \value{
   A numeric vector.
@@ -109,7 +156,8 @@ rsocs(n, lambda, approx=FALSE)
    co <- c(1, 0.5, 0.3)
    xx <- rsocs(N, co)
    plot(density(xx))
-   curve(dsocs(x, co), add=TRUE, col=4)
+   curve(dsocs(x, co), add=TRUE, col=8, lwd=3)
+   curve(dsocs(x, co, method="F"), add=TRUE, col=2)
    qqplot(xx, qsocs(ppoints(N), co))
    abline(0,1)
    plot(ppoints(N), psocs(sort(xx), co))

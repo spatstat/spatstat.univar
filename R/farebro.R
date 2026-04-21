@@ -9,12 +9,12 @@
 #'   The distribution of a positive linear combination of \chi^2
 #'   random variables. Applied Statistics 33 #3 (1984) 332--339
 #'
-#'   C implementation by Adrian Baddeley 2026
+#'   R and C implementation by Adrian Baddeley 2026
 #'
-#'   $Revision: 1.4 $ $Date: 2026/04/20 07:46:34 $
+#'   $Revision: 1.7 $ $Date: 2026/04/21 01:23:24 $
 
 farebro <- function(lambda, mult=1, delta=0, x, ...,
-                    maxit=1e4, eps = 1e-4, warn=TRUE) {
+                    maxit=1e6, eps=1e-6, warn=TRUE) {
   stopifnot(all(lambda > 0))
   stopifnot(all(mult > 0))
   stopifnot(all(delta >= 0))
@@ -68,7 +68,7 @@ farebro <- function(lambda, mult=1, delta=0, x, ...,
   } else if(!is.na(k <- match(as.character(i), names(.FBE)))) {
     .FBE[[k]]
   } else {
-    paste("unrecognised error code", i)
+    "unrecognised error code"
   }
 }
 

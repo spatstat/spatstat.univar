@@ -17,10 +17,10 @@
 \alias{quantilefun.interpolatedCDF}
 \alias{IdenticalRowPair}
 \alias{IdenticalRows}
-\alias{socsCalc}
 \alias{socsTest}
 \alias{StieltjesCalc}
 \alias{StieltjesCalc.stepfun}
+\alias{woodCalc}
 \description{
   Undocumented Functions
 }
@@ -42,10 +42,10 @@ match.kernel(kernel)
 \method{quantilefun}{interpolatedCDF}(x, \dots, type)
 IdenticalRowPair(i,j,a,b)
 IdenticalRows(i,j,a,b)
-socsCalc(lambda, zero, verbose)
-socsTest(statistic, lambda, data.name, \dots, method)
+socsTest(statistic, lambda, data.name, \dots, approxmethod, testmethod)
 StieltjesCalc(M, f, \dots)
 \method{StieltjesCalc}{stepfun}(M, f, \dots)
+woodCalc(lambda, zero, verbose)
 }
 \details{
   These functions are not documented.

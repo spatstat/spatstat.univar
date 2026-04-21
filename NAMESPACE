@@ -81,7 +81,6 @@ export("rkernel")
 export("rounding")
 export("rounding.default")
 export("rsocs")
-export("socsCalc")
 export("socsTest")
 export("stieltjes")
 export("StieltjesCalc")
@@ -96,6 +95,7 @@ export("weighted.median")
 export("weighted.quantile")
 export("weighted.var")
 export("whist")
+export("woodCalc")
 
 # .......  Special cases ........... 
 # .......  End of special cases  ... 
