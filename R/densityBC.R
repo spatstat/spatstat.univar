@@ -7,7 +7,7 @@
 #' Copyright (c) 2024-2026 Adrian Baddeley, Tilman Davies and Martin Hazelton
 #' GNU Public Licence (>= 2.0)
 #'
-#' $Revision: 1.3 $ $Date: 2026/02/16 09:06:44 $
+#' $Revision: 1.4 $ $Date: 2026/11/18 02:18:46 $
 
 densityBC <- function(x, kernel="epanechnikov", bw=NULL, 
                     ...,
@@ -16,7 +16,8 @@ densityBC <- function(x, kernel="epanechnikov", bw=NULL,
                     weights = rep(1, length(x))/length(x),
                     from=0, to=max(x), n=256,
                     zerocor=c("none", "weighted", "convolution",
-                              "reflection", "bdrykern", "JonesFoster"),
+                              "reflection", "bdrykern",
+                              "JonesFoster", "stableJF"),
                     fast=FALSE, xout=NULL, internal=list()) {
 
   xname <- short.deparse(substitute(x))
@@ -142,7 +143,7 @@ densityBC <- function(x, kernel="epanechnikov", bw=NULL,
 
   ## ........... Jones-Foster estimate --- combination of two methods -----
 
-  if(zerocor == "JonesFoster") {
+  if(zerocor %in% c("JonesFoster", "stableJF")) {
     estconv <- densityBC(x, kernel=kernel, bw=bw, weights = weights,
                          from=from, to=to, n=nr, 
                          fast=fast, xout=xout, 
@@ -156,10 +157,15 @@ densityBC <- function(x, kernel="epanechnikov", bw=NULL,
     result <- estconv
     ecy <- estconv$y
     eby <- estbdry$y
-    result$y <- ifelse(ecy <= 0, 0, ecy * exp(eby/ecy - 1))
+    jfy <- ifelse(ecy <= 0, 0, ecy * exp(eby/ecy - 1))
+    result$y <- switch(zerocor,
+                       JonesFoster = jfy,
+                       stableJF    = ifelse(eby > ecy, eby, jfy))
     result$call <- thecall
     result$data.name <- xname
     if(DEBUG) {
+      fak <- ifelse(ecy <= 0, 1, exp(eby/ecy - 1))
+      splat("\t\tJones-Foster adjustment factor range:", prange(range(fak)))
       elapsed <- proc.time() - started
       splat("\tdensityBC returned", paren(zerocor), "time taken",
             elapsed[[3]], "sec")

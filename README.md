@@ -9,7 +9,8 @@ contains code for estimation of **univariate probability distributions**.
 
 You are viewing the GitHub repository which holds
 the latest **development version** of `spatstat.univar`.
-For the latest public release on CRAN, click the green badge above.
+For the latest public release on CRAN, 
+see the [CRAN page](https://CRAN.R-project.org/package=spatstat.univar).
 
 ### Overview 
 

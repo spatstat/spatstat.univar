@@ -1,3 +1,14 @@
+        CHANGES IN spatstat.univar VERSION 3.2-0.002
+
+OVERVIEW
+
+    o New option for boundary correction at zero in densityBC.
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o densityBC
+    New option 'zerocor="stableJF"' for improved numerical stability.
+    
         CHANGES IN spatstat.univar VERSION 3.2-0
 
 OVERVIEW
