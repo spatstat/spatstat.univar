@@ -11,7 +11,7 @@
 \method{densityAdaptiveKernel}{default}(X, bw, \dots,
        weights = NULL,
        zerocor=c("none", "weighted", "convolution",
-                 "reflection", "bdrykern", "JonesFoster"),
+                 "reflection", "bdrykern", "JonesFoster", "stableJF"),
        at = c("grid", "data"), ngroups=Inf, fast=TRUE)
 }
 \arguments{

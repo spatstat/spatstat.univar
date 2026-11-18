@@ -15,7 +15,7 @@ densityAdaptiveKernel <- function(X, ...) {
 densityAdaptiveKernel.default <-
   function(X, bw, ...,  weights=NULL,
            zerocor=c("none", "weighted", "convolution",
-                     "reflection", "bdrykern", "JonesFoster"),
+                     "reflection", "bdrykern", "JonesFoster", "stableJF"),
            at=c("grid", "data"),
            ngroups=Inf, fast=TRUE) {
   check.nvector(X)
@@ -94,7 +94,7 @@ densityAdaptiveKernel.default <-
                     "or a character string specifying the bandwidth rule"),
               call.=FALSE)
 
-  if(zerocor == "JonesFoster") {
+  if(zerocor %in% c("JonesFoster", "stableJF")) {
     #' Jones-Foster estimate involves two corrected estimates
     resC <- densityAdaptiveKernel.default(X, bw, ..., weights=weights,
                                           zerocor="convolution", at=at,
@@ -102,13 +102,14 @@ densityAdaptiveKernel.default <-
     resB <- densityAdaptiveKernel.default(X, bw, ..., weights=weights,
                                           zerocor="bdrykern", at=at,
                                           ngroups=ngroups, fast=fast)
+    #' calcJonesFoster is defined in densityBC.R
     switch(at,
            data = {
-             result <- resC * exp(resB/resC - 1)
+             result <- calcJonesFoster(resC, resB, zerocor)
            },
            grid = {
              result <- resC
-             result$y <- resC$y * exp(resB$y/resC$y - 1)
+             result$y <- calcJonesFoster(resC$y, resB$y, zerocor)
              result$call <- match.call()
            })
     return(result)

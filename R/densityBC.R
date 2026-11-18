@@ -157,10 +157,7 @@ densityBC <- function(x, kernel="epanechnikov", bw=NULL,
     result <- estconv
     ecy <- estconv$y
     eby <- estbdry$y
-    jfy <- ifelse(ecy <= 0, 0, ecy * exp(eby/ecy - 1))
-    result$y <- switch(zerocor,
-                       JonesFoster = jfy,
-                       stableJF    = ifelse(eby > ecy, eby, jfy))
+    result$y <- calcJonesFoster(ecy, eby, zerocor)
     result$call <- thecall
     result$data.name <- xname
     if(DEBUG) {
@@ -407,3 +404,10 @@ checkCerror <- function(object) {
   return(invisible(TRUE))
 }
 
+calcJonesFoster <- function(fc, fb, zerocor=c("JonesFoster", "stableJF")) {
+  zerocor <- match.arg(zerocor)
+  fj <- ifelse(fc <= 0, 0, fc * exp(fb/fc - 1))
+  if(zerocor == "JonesFoster") return(fj)
+  fs <- ifelse(fb >= pmax(fc, 0), fb, fj)
+  return(fs)
+}

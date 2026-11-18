@@ -3,6 +3,7 @@
 \alias{as.breakpts}
 \alias{breakpts}
 \alias{breakpts.from.r}
+\alias{calcJonesFoster}
 \alias{check.hist.lengths}
 \alias{check.bandwidth}
 \alias{kermom}
@@ -27,6 +28,7 @@
 as.breakpts(\dots)
 breakpts(val, maxi, even, npos, step)
 breakpts.from.r(r)
+calcJonesFoster(fc, fb, zerocor)
 check.hist.lengths(hist, breaks)
 check.bandwidth(bw, descrip, fatal)
 kermom(m, r, kernel, mean, sd)
@@ -46,7 +48,9 @@ StieltjesCalc(M, f, \dots)
 woodCalc(lambda, zero, verbose)
 }
 \details{
-  These functions are not documented.
+  These functions are not documented
+  and should not be used in user-level code, as they may be changed
+  without warning.
 }
 \value{
   \code{as.breakpts}, \code{breakpts}, \code{breakpts.from.r} and
