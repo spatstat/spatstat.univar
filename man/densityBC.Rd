@@ -64,12 +64,12 @@
     Number of \eqn{r} values for which density should be computed.
   }
   \item{zerocor}{
-    String (partially matched) specifying a correction for the boundary effect
-    bias at \eqn{r=0} when estimating a density on the positive
-    half line. Possible values are
+    Character string (partially matched) specifying a correction
+    for the boundary effect bias at \eqn{x=0} when estimating
+    a density on the positive half line. Possible values are
     \code{"none"}, \code{"weighted"}, \code{"convolution"},
     \code{"reflection"}, \code{"bdrykern"}, \code{"JonesFoster"}
-    and \code{"stableJF"}.
+    and \code{"stableJF"}. Default is to perform no boundary correction.
   }
   \item{fast}{
     Logical value specifying whether to perform the calculation rapidly
@@ -118,7 +118,8 @@
   and \eqn{\kappa}{kappa} is the kernel, a probability density on the
   real line. 
 
-  If \code{zerocor} is given, the probability density is assumed to be
+  If \code{zerocor} is given and \code{zerocor != "none"},
+  the probability density is assumed to be
   confined to the positive half-line; the numerical values in \code{x}
   must all be non-negative; and a boundary correction is
   applied to compensate for bias arising due to truncation at the origin:
@@ -225,8 +226,9 @@
       is greater than for all the options above.
     }
     \item{\code{zerocor="stableJF"}:}{
-      The Jones-Foster estimate is modified to reduce numerical
-      instability in small samples:
+      In order to reduce numerical instability in small samples,
+      the Jones-Foster estimate is modified as proposed by Adrian
+      Baddeley:
       \deqn{
 	\widehat f_{SJF}(x) = 
 	\left\{

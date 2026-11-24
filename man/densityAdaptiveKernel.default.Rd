@@ -34,9 +34,12 @@
     Optional. Numeric vector of weights attached to each value in \code{X}.
   }
   \item{zerocor}{
-    Character string (partially matched) specifying a boundary
-    correction. This is appropriate when \code{X} contains only positive
-    values.
+    Character string (partially matched) specifying a correction
+    for the boundary effect bias at \eqn{x=0} when estimating a
+    density on the positive half line. This is appropriate
+    when \code{X} contains only positive numbers.
+    This argument is passed to \code{\link[spatstat.univar]{densityBC}}.
+    The default is to perform no boundary correction at zero.
   }
   \item{at}{
     String (partially matched) specifying whether to evaluate the
@@ -106,7 +109,8 @@
   determined by the smoothing bandwidth values \code{bw}.
 
   Typically the bandwidth values are computed by first computing
-  a pilot estimate of the intensity, then using \code{\link[spatstat.univar]{bw.abram.default}}
+  a pilot estimate of the intensity,
+  then using \code{\link[spatstat.univar]{bw.abram.default}}
   to compute the vector of bandwidths according to Abramson's rule.
   This involves specifying a global bandwidth \code{h0}.
 }
@@ -132,7 +136,8 @@
   \adrian and \tilman.
 }
 \seealso{
-  \code{\link[spatstat.univar]{bw.abram.default}}
+  \code{\link[spatstat.univar]{bw.abram.default}},
+  \code{\link[spatstat.univar]{densityBC}}
 }
 \examples{
   xx <- rexp(100, rate=5)
